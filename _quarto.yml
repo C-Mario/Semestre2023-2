@@ -1,23 +1,146 @@
 project:
   type: book
+  output-dir: docs
 
 book:
-  title: "libro"
-  author: "Norah Jones"
-  date: "8/21/2023"
+  title: "Semestre 2023-2"
+  author: "Carlos Mario Castaño"
+  # sharing: [twitter, facebook, linkedin]
+  search: 
+   location: navbar
+   type: textbox
+   limit: 10
+   collapse-after: 2
+   copy-button: true
+  navbar: 
+    background: white
+    foreground: "#1E88E5"
+    logo: images/logo2.png
+    left:
+      - text: UNAL
+        icon: bank2
+        href: https://unal.edu.co
+        target: _blank
+      - text: GitHub
+        icon: github
+        href: https://github.com/estadisticaun/Memoria
+        target: _blank
+      # - text: Compartir
+      #   icon: share
+      #   menu: 
+      #     - icon: twitter
+      #       text: Twitter
+      #       href: https://twitter.com/share?url=<estadisticaun.github.io/Memoria>
+      #       target: _blank
+      #     - icon: facebook
+      #       text: facebook
+      #       href: https://www.facebook.com/share.php?u=estadisticaun.github.io/Memoria
+      #       target: _blank
+      #     - icon: linkedin
+      #       text: Linkedln
+      #       href: https://www.linkedin.com/sharing/share-offsite/?url=estadisticaun.github.io/Memoria
+      #       target: _blank
+  reader-mode: true
+  page-footer:
+    left: |
+      Universidad Nacional de Colombia. 
+    right: |
+      Este libro fue construido con <a href="https://quarto.org/">Quarto</a>.
+    center: |
+      2018 - 2021
+    background: "#ECEFF1"
+    foreground: "#37474F"
+    border: true
+  cover-image: images/manami.jpg
+  site-url: https://estadisticaun.github.io/Memoria
+  repo-branch: master
+  repo-actions: [edit, issue]
+  date: "01/08/2023"
+  date-format: "MM-D-YYYY"
+  page-navigation: true
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
-    - references.qmd
+    - part: "Series de tiempo"
+      chapters:
+        - capitulos/series1.qmd
+    - part: "Métodos no paramétricos"
+      chapters:
+        - capitulos/nopara1.qmd
+    - part: "Bases de datos"
+      chapters:
+        - capitulos/bd1.qmd
+    # - summary.qmd
+    # - intro.qmd
+    # - references.qmd
 
-bibliography: references.bib
+  sidebar:
+    style: docked
+    background: none
+    foreground: "#2196F3"
+    border: true
+    alignment: "left"
+  
+      
+website:
+  back-to-top-navigation: true
+
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      light: cerulean.scss
+      dark: darkly.scss
+    grid:
+      sidebar-width: 400px
+      body-width: 1000px
+      margin-width: 250px
+      gutter-width: 1.5rem
+    # subtitle: "Subtítulo"
+    toc-location: right
+    number-sections: true
+    number-depth: 1
+    # fontsize: 20px
+    # linestretch: 0.9
+    # fontcolor: "#424242"
+    monobackgroundcolor: "#90A4AE"
+    # backgroundcolor: "#FAFAFA"
+    linkcolor: "#F50057"
+    # page-layout: article
+    title-block-style: plain
+    # title-block-banner: true
+    # title-block-banner-color: red
+    # title-block-categories: enables
+    margin-left: 5px
+    margin-right: 5px
+    margin-top: 5px
+    margin-bottom: 0px
+    #Code
+    code-fold: show
+    code-summary: "Código"	
+    code-overflow: scroll
+    code-line-numbers: 3,4,5
+    code-copy: hover
+    code-link: false
+    code-annotations: true
+    # code-tools:
+    code-block-border-left: "#EC407A"
+    #code-block-bg: "#CFD8DC"
+    # highlight-style:
+    #Figures
+    # fig-align: left
+    fig-cap-location: bottom
+    #Tables
+    tbl-cap-location: bottom
+    #Links
+    link-external-icon: true
+    link-external-newwindow: true
+    #Footnotes
+    footnotes-hover: true
+    reference-location: section
   pdf:
     documentclass: scrreprt
+
+bibliography: references.bib
 
 editor: visual
 
