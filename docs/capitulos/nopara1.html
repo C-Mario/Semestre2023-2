@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Semestre 2023-2 - 2&nbsp; introducción</title>
+<title>Semestre 2023-2 - 2&nbsp; Estimación histograma de la densidad</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -63,6 +97,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -113,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitulos/nopara1.html">Métodos no paramétricos</a></li><li class="breadcrumb-item"><a href="../capitulos/nopara1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">introducción</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitulos/nopara1.html">Métodos no paramétricos</a></li><li class="breadcrumb-item"><a href="../capitulos/nopara1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -168,7 +204,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../capitulos/nopara1.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">introducción</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></span></a>
   </div>
 </li>
       </ul>
@@ -196,14 +232,20 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenido</h2>
+   
+  <ul>
+  <li><a href="#propiedades-del-estimador-histograma" id="toc-propiedades-del-estimador-histograma" class="nav-link active" data-scroll-target="#propiedades-del-estimador-histograma">Propiedades del estimador histograma</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">introducción</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></h1>
 </div>
 
 
@@ -218,8 +260,80 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>La idea es que una variable aleatoria tiene un proceso o función de densidad subyacente la cuál genera los datos que tendremos finalmente a disposición. Dada una variable aleatoria <span class="math inline">\(X\)</span>, entonces <span class="math inline">\(X \sim f\left(x;\theta\right)\)</span>. En el caso paramétrico la estimación de la función de densidad estaría dada por <span class="math inline">\(\hat f \left(x;\theta\right) = f\left(x;\hat{\theta}\right)\)</span> asumiendo que la población de la cuál provienen los datos sigue una distribución conocida con función de densidad <span class="math inline">\(f\)</span>.</p>
+<p>En el caso no paramétrico, no se hace supuesto alguno sobre la función de densidad asociada a la población de la cuál provienen los datos. La estimación de la función de densidad puede hacerse por diferentes métodos, entre ellos los siguientes:</p>
+<ul>
+<li>Histograma</li>
+<li>Polígono de frecuencias</li>
+<li>Núcleo (kernel)</li>
+</ul>
+<p>El primer enfonque es realizar la estimación de la función de densidad usando la <strong>estimación histograma de la densidad</strong>. Por ejemplo, si se tienen 100 datos cuyo histograma de frecuencias absolutas está dado por:</p>
+<div class="cell">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">hist</span>(x, <span class="at">freq=</span><span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"#42A5F5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="nopara1_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>La estimación histograma de la densidad dados estos 100 datos es el siguiente:</p>
+<div class="cell">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">hist</span>(x, <span class="at">freq=</span><span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"#42A5F5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="nopara1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Para realizar la estimación se tiene en cuenta lo siguiente:</p>
+<ul>
+<li><span class="math inline">\(f\left(x\right)\)</span> es la función de densidad asociada a la variable aleatoria <span class="math inline">\(X\)</span></li>
+<li><span class="math inline">\(\hat{f}\left(x\right)\)</span> es la estimación de la función de densidad</li>
+<li><span class="math inline">\(\hat f_H \left(x\right)\)</span> es la estimación histograma de la función de densidad</li>
+<li>El área de cada rectángulo del histograma se denota por <span class="math inline">\(f_j\)</span> y depende del número de datos cuyo valor cae en el dicho intervalo y del número total de datos, de tal manera que <span class="math inline">\(f_j = \frac{n_j}{n}\)</span></li>
+<li>El área de cada rectángulo también puede verse en términos de la estimación histograma y de la amplitud del intervalo. <span class="math inline">\(\hat{f}_H \left(x\right) \times 2b\)</span> donde <span class="math inline">\(b\)</span> es un valor a la derecha y a la izquierda del centro del intervalo.</li>
+</ul>
+<p>Así, se tiene que si la amplitud del intervalo es <span class="math inline">\(2b\)</span>, entonces:</p>
+<p><span class="math display">\[\frac{n_j}{n} = 2b \hat{f}_H \left(x\right)\]</span> <span class="math display">\[\hat{f}_H \left(x\right)=\frac{n_j}{2nb} \hspace{0.5cm} \textrm{donde} \hspace{0.5cm} n_j=\sum_{i=1}^n \mathbf{I}_{\left[x-b, x+b\right]} \left(x_i\right)\]</span> Ahora, según <span class="math inline">\(n_j\)</span> se tiene que:</p>
+<p><span class="math display">\[
+\begin{align}
+x-b \leq x_i \leq x+&amp;b\\
+-b \leq x_i-x \leq &amp;b\\
+-1 \leq \frac{x_i-x}{b} \leq 1
+\end{align}
+\]</span> y por lo tanto</p>
+<p><span class="math display">\[n_j = \sum_{i=1}^n \mathbf{I}_{\left[-1,1\right]}\left(\frac{x_i-x}{b}\right)\]</span></p>
+<p>luego, la estimación histograma de la densidad puede escribirse como:</p>
+<p><span class="math display">\[\hat{f}_H \left(x\right) = \frac{1}{nb} \sum_{i=1}^n \frac{1}{2} \mathbf{I}_{\left[-1,1\right]}\left(\frac{x_i-x}{b}\right) = \frac{1}{nb} \sum_{i=1}^n K_U\left(u\right)\]</span> donde</p>
+<p><span class="math display">\[u = \left(\frac{x_i-x}{b}\right) \hspace{0.5cm} \mathrm{y} \hspace{0.5cm} K_U\left(u\right) = \begin{cases}\frac{1}{2} &amp; -1&lt;u&lt;1 \\ 0 &amp; \text { e.o.c }\end{cases}\]</span> <span class="math inline">\(K_U\)</span> es un kernel uniforme. Es decir, es una función de densidad centrada en <span class="math inline">\(0\)</span> y toma valores de la forma <span class="math inline">\(u\)</span> entre <span class="math inline">\(-1\)</span> y <span class="math inline">\(1\)</span>.</p>
+<p>Si ahora se supone que la amplitud del intervalo es <span class="math inline">\(b\)</span>, entonces se tiene que:</p>
+<p><span class="math display">\[\frac{n_j}{n} = b\hat{f}_H \left(x\right)\]</span> <span class="math display">\[\hat{f}_H \left(x\right)=\frac{n_j}{nb} \hspace{0.5cm} \textrm{donde} \hspace{0.5cm} n_j=\sum_{i=1}^n \mathbf{I}_{\left[x-\frac{b}{2}, x+\frac{b}{2}\right]} \left(x_i\right)\]</span> de <span class="math inline">\(n_j\)</span> se tiene que</p>
+<p><span class="math display">\[
+\begin{align}
+x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
+-\frac{b}{2} \leq x_i-x \leq &amp;\frac{b}{2}\\
+-\frac{1}{2} \leq \frac{x_i-x}{b} \leq &amp;\frac{1}{2}
+\end{align}
+\]</span> y por lo tanto:</p>
+<p><span class="math display">\[\hat{f}_H \left(x\right)=\frac{1}{nb} \sum_{i=1}^n \mathbf{I}_{\left[-\frac{1}{2},\frac{1}{2}\right]}\left(\frac{x_i-x}{b}\right)=\frac{1}{nb}K_U\left(u\right)\]</span> donde</p>
+<p><span class="math display">\[u = \left(\frac{x_i-x}{b}\right) \hspace{0.5cm} \mathrm{y} \hspace{0.5cm} K_U\left(u\right) = \begin{cases} 1 &amp; -\frac{1}{2}&lt;u&lt;\frac{1}{2} \\ 0 &amp; \text { e.o.c }\end{cases}\]</span> en forma general, si la amplitud del intervalo es <span class="math inline">\(ab\)</span> entonces:</p>
+<p><span class="math display">\[\hat{f}_H \left(x\right)=\frac{1}{nb} \sum_{i=1}^n \frac{1}{a} \mathbf{I}_{\left[-\frac{ab}{2},\frac{ab}{2}\right]}\left(\frac{x_i-x}{b}\right)=\frac{1}{nb}K_U\left(u\right)\]</span> donde</p>
+<p><span class="math display">\[u = \left(\frac{x_i-x}{b}\right) \hspace{0.5cm} \mathrm{y} \hspace{0.5cm} K_U\left(u\right) = \begin{cases} \frac{1}{a} &amp; -\frac{ab}{2}&lt;u&lt;\frac{ab}{2} \\ 0 &amp; \text { e.o.c }\end{cases}\]</span></p>
+<section id="propiedades-del-estimador-histograma" class="level2">
+<h2 class="anchored" data-anchor-id="propiedades-del-estimador-histograma">Propiedades del estimador histograma</h2>
+<p>Dado que el estimador histograma de la densidad depende de la amplitud <span class="math inline">\(b\)</span> del intervalo, la idea es escoger el valor de la amplitud que minimice el <span class="math inline">\(\textrm{MSE}\)</span> para así poder encontrar una estimación más exacta de la función de densidad subyacente a la población en cuestión.</p>
+<p><span class="math display">\[\begin{align}
+\textrm{Var}\left[\hat b - b\right] &amp;= \textrm{E}\left[\left(\hat b - b\right)^2\right] - \left(\textrm{E}\left[\hat b - b\right]\right)^2\\
+\textrm{Var}\left[\hat b\right] &amp;= \underbrace{\textrm{E}\left[\left(\hat b - b\right)^2\right]}_{\textrm{MSE}} - \underbrace{\left(\textrm{E}\left[\hat b\right]-b\right)^2}_{\textrm{BIAS}^2}\\
+\end{align}\]</span></p>
+<p>y despejando, se tiene que:</p>
+<p><span class="math display">\[\underbrace{\textrm{E}\left[\left(\hat b - b\right)^2\right]}_{\textrm{MSE}} = \textrm{Var}\left[\hat b\right] + \underbrace{\left(\textrm{E}\left[\hat b\right]-b\right)^2}_{\textrm{BIAS}^2}\]</span></p>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

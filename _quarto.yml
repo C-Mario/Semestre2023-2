@@ -69,9 +69,6 @@ book:
     - part: "Bases de datos"
       chapters:
         - capitulos/bd1.qmd
-    # - summary.qmd
-    # - intro.qmd
-    # - references.qmd
 
   sidebar:
     style: docked
@@ -139,8 +136,6 @@ format:
     reference-location: section
   pdf:
     documentclass: scrreprt
-
-bibliography: references.bib
 
 editor: visual
 
