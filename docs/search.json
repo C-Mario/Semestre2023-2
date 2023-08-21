@@ -14,11 +14,11 @@
     "text": "esto es series de tiempo!\n\n\n\n Volver arriba"
   },
   {
-    "objectID": "capitulos/nopara1.html",
-    "href": "capitulos/nopara1.html",
-    "title": "2  introducción",
-    "section": "",
-    "text": "Volver arriba"
+    "objectID": "capitulos/nopara1.html#propiedades-del-estimador-histograma",
+    "href": "capitulos/nopara1.html#propiedades-del-estimador-histograma",
+    "title": "2  Estimación histograma de la densidad",
+    "section": "Propiedades del estimador histograma",
+    "text": "Propiedades del estimador histograma\nDado que el estimador histograma de la densidad depende de la amplitud \\(b\\) del intervalo, la idea es escoger el valor de la amplitud que minimice el \\(\\textrm{MSE}\\) para así poder encontrar una estimación más exacta de la función de densidad subyacente a la población en cuestión.\n\\[\\begin{align}\n\\textrm{Var}\\left[\\hat b - b\\right] &= \\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right] - \\left(\\textrm{E}\\left[\\hat b - b\\right]\\right)^2\\\\\n\\textrm{Var}\\left[\\hat b\\right] &= \\underbrace{\\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right]}_{\\textrm{MSE}} - \\underbrace{\\left(\\textrm{E}\\left[\\hat b\\right]-b\\right)^2}_{\\textrm{BIAS}^2}\\\\\n\\end{align}\\]\ny despejando, se tiene que:\n\\[\\underbrace{\\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right]}_{\\textrm{MSE}} = \\textrm{Var}\\left[\\hat b\\right] + \\underbrace{\\left(\\textrm{E}\\left[\\hat b\\right]-b\\right)^2}_{\\textrm{BIAS}^2}\\]"
   },
   {
     "objectID": "capitulos/bd1.html",
@@ -26,12 +26,5 @@
     "title": "3  Introducción",
     "section": "",
     "text": "Volver arriba"
-  },
-  {
-    "objectID": "capitulos/nopara1.html#propiedades-del-estimador-histograma",
-    "href": "capitulos/nopara1.html#propiedades-del-estimador-histograma",
-    "title": "2  Estimación histograma de la densidad",
-    "section": "Propiedades del estimador histograma",
-    "text": "Propiedades del estimador histograma\nDado que el estimador histograma de la densidad depende de la amplitud \\(b\\) del intervalo, la idea es escoger el valor de la amplitud que minimice el \\(\\textrm{MSE}\\) para así poder encontrar una estimación más exacta de la función de densidad subyacente a la población en cuestión.\n\\[\\begin{align}\n\\textrm{Var}\\left[\\hat b - b\\right] &= \\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right] - \\left(\\textrm{E}\\left[\\hat b - b\\right]\\right)^2\\\\\n\\textrm{Var}\\left[\\hat b\\right] &= \\underbrace{\\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right]}_{\\textrm{MSE}} - \\underbrace{\\left(\\textrm{E}\\left[\\hat b\\right]-b\\right)^2}_{\\textrm{BIAS}^2}\\\\\n\\end{align}\\]\ny despejando, se tiene que:\n\\[\\underbrace{\\textrm{E}\\left[\\left(\\hat b - b\\right)^2\\right]}_{\\textrm{MSE}} = \\textrm{Var}\\left[\\hat b\\right] + \\underbrace{\\left(\\textrm{E}\\left[\\hat b\\right]-b\\right)^2}_{\\textrm{BIAS}^2}\\]"
   }
 ]
