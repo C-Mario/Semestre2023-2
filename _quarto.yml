@@ -66,6 +66,7 @@ book:
     - part: "Métodos no paramétricos"
       chapters:
         - capitulos/nopara1.qmd
+        - capitulos/nopara2.qmd
     - part: "Bases de datos"
       chapters:
         - capitulos/bd1.qmd
