@@ -23,7 +23,7 @@ book:
         target: _blank
       - text: GitHub
         icon: github
-        href: https://github.com/estadisticaun/Memoria
+        href: https://github.com/C-Mario/Semestre2023-2
         target: _blank
       # - text: Compartir
       #   icon: share
@@ -52,7 +52,7 @@ book:
     foreground: "#37474F"
     border: true
   cover-image: images/manami.jpg
-  site-url: https://estadisticaun.github.io/Memoria
+  site-url: https://c-mario.github.io/Semestre2023-2/
   repo-branch: master
   repo-actions: [edit, issue]
   date: "01/08/2023"
