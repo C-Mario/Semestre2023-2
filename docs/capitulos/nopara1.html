@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Semestre 2023-2 - 2&nbsp; Estimación histograma de la densidad</title>
+<title>Semestre 2023-2 - 2&nbsp; Capítulo 1 del curso</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -102,7 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="nav-sidebar docked nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">UNAL</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="https://github.com/estadisticaun/Memoria" rel="" target="_blank"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/C-Mario/Semestre2023-2" rel="" target="_blank"><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text">GitHub</span></a>
   </li>  
@@ -149,7 +149,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitulos/nopara1.html">Métodos no paramétricos</a></li><li class="breadcrumb-item"><a href="../capitulos/nopara1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitulos/nopara1.html">Métodos no paramétricos</a></li><li class="breadcrumb-item"><a href="../capitulos/nopara1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../capitulos/nopara1.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></span></a>
   </div>
 </li>
       </ul>
@@ -236,16 +236,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Tabla de contenido</h2>
    
   <ul>
-  <li><a href="#propiedades-del-estimador-histograma" id="toc-propiedades-del-estimador-histograma" class="nav-link active" data-scroll-target="#propiedades-del-estimador-histograma">Propiedades del estimador histograma</a></li>
+  <li><a href="#estimación-histograma-de-la-densidad" id="toc-estimación-histograma-de-la-densidad" class="nav-link active" data-scroll-target="#estimación-histograma-de-la-densidad">Estimación histograma de la densidad</a></li>
+  <li><a href="#propiedades-del-estimador-histograma" id="toc-propiedades-del-estimador-histograma" class="nav-link" data-scroll-target="#propiedades-del-estimador-histograma">Propiedades del estimador histograma</a></li>
+  <li><a href="#notación-o-y-o-de-landau" id="toc-notación-o-y-o-de-landau" class="nav-link" data-scroll-target="#notación-o-y-o-de-landau">Notación <span class="math inline">\(O\)</span> y <span class="math inline">\(o\)</span> de Landau</a>
+  <ul class="collapse">
+  <li><a href="#notación-o" id="toc-notación-o" class="nav-link" data-scroll-target="#notación-o">Notación <span class="math inline">\(O\)</span></a></li>
+  <li><a href="#notación-o-1" id="toc-notación-o-1" class="nav-link" data-scroll-target="#notación-o-1">Notación <span class="math inline">\(o\)</span></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Estimación histograma de la densidad</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></h1>
 </div>
 
 
@@ -260,6 +266,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<section id="estimación-histograma-de-la-densidad" class="level2">
+<h2 class="anchored" data-anchor-id="estimación-histograma-de-la-densidad">Estimación histograma de la densidad</h2>
 <p>La idea es que una variable aleatoria tiene un proceso o función de densidad subyacente la cuál genera los datos que tendremos finalmente a disposición. Dada una variable aleatoria <span class="math inline">\(X\)</span>, entonces <span class="math inline">\(X \sim f\left(x;\theta\right)\)</span>. En el caso paramétrico la estimación de la función de densidad estaría dada por <span class="math inline">\(\hat f \left(x;\theta\right) = f\left(x;\hat{\theta}\right)\)</span> asumiendo que la población de la cuál provienen los datos sigue una distribución conocida con función de densidad <span class="math inline">\(f\)</span>.</p>
 <p>En el caso no paramétrico, no se hace supuesto alguno sobre la función de densidad asociada a la población de la cuál provienen los datos. La estimación de la función de densidad puede hacerse por diferentes métodos, entre ellos los siguientes:</p>
 <ul>
@@ -322,6 +330,7 @@ x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
 <p><span class="math display">\[u = \left(\frac{x_i-x}{b}\right) \hspace{0.5cm} \mathrm{y} \hspace{0.5cm} K_U\left(u\right) = \begin{cases} 1 &amp; -\frac{1}{2}&lt;u&lt;\frac{1}{2} \\ 0 &amp; \text { e.o.c }\end{cases}\]</span> en forma general, si la amplitud del intervalo es <span class="math inline">\(ab\)</span> entonces:</p>
 <p><span class="math display">\[\hat{f}_H \left(x\right)=\frac{1}{nb} \sum_{i=1}^n \frac{1}{a} \mathbf{I}_{\left[-\frac{ab}{2},\frac{ab}{2}\right]}\left(\frac{x_i-x}{b}\right)=\frac{1}{nb}K_U\left(u\right)\]</span> donde</p>
 <p><span class="math display">\[u = \left(\frac{x_i-x}{b}\right) \hspace{0.5cm} \mathrm{y} \hspace{0.5cm} K_U\left(u\right) = \begin{cases} \frac{1}{a} &amp; -\frac{ab}{2}&lt;u&lt;\frac{ab}{2} \\ 0 &amp; \text { e.o.c }\end{cases}\]</span></p>
+</section>
 <section id="propiedades-del-estimador-histograma" class="level2">
 <h2 class="anchored" data-anchor-id="propiedades-del-estimador-histograma">Propiedades del estimador histograma</h2>
 <p>Dado que el estimador histograma de la densidad depende de la amplitud <span class="math inline">\(b\)</span> del intervalo, la idea es escoger el valor de la amplitud que minimice el <span class="math inline">\(\textrm{MSE}\)</span> para así poder encontrar una estimación más exacta de la función de densidad subyacente a la población en cuestión.</p>
@@ -331,8 +340,59 @@ x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
 \end{align}\]</span></p>
 <p>y despejando, se tiene que:</p>
 <p><span class="math display">\[\underbrace{\textrm{E}\left[\left(\hat b - b\right)^2\right]}_{\textrm{MSE}} = \textrm{Var}\left[\hat b\right] + \underbrace{\left(\textrm{E}\left[\hat b\right]-b\right)^2}_{\textrm{BIAS}^2}\]</span></p>
+</section>
+<section id="notación-o-y-o-de-landau" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="notación-o-y-o-de-landau">Notación <span class="math inline">\(O\)</span> y <span class="math inline">\(o\)</span> de Landau</h2>
+<section id="notación-o" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="notación-o">Notación <span class="math inline">\(O\)</span></h3>
+<p><span class="math inline">\(\textrm{Big}-O\)</span> es una notación matemática para describir el comportamiento asintótico de una función, cuando su argumento tiende a un valor en particular o al infinito. Su uso en la computación es análogo, se usa para medir la complejidad de los algoritmos; es decir, la cantidad de operaciones que le toma a un algoritmo realizar internamente para arrojar el resultado final dada una entrada particular del algoritmo.</p>
+<p>Por ejemplo, cuando un algoritmo es <span class="math inline">\(O\left(n^2\right)\)</span>, se dice que es cuadrático en tiempo y se sabe que estaría en el orden de realizar <span class="math inline">\(n^2\)</span> operaciones para procesar una entrada de tamaño <span class="math inline">\(n\)</span>.</p>
+<p>Para una función dada <span class="math inline">\(g\left(n\right)\)</span>, <span class="math inline">\(O\left(g\left(n\right)\right)\)</span> se define como sigue:</p>
+<p><span class="math display">\[O\left(g\left(n\right)\right) = \left\{f\left(n\right): \textrm{existen constantes positivas} \hspace{0.2cm} c \hspace{0.2cm} \textrm{y} \hspace{0.2cm} n_0 \hspace{0.2cm} \textrm{tales que} \hspace{0.2cm} 0 \leq f\left(n\right) \leq cg\left(n\right) \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0 \right\}\]</span> Esto quiere decir que <span class="math inline">\(O\left(g\left(n\right)\right)\)</span> es un conjunto de funciones que después de <span class="math inline">\(n_0\)</span> son más pequeñas o a lo sumo iguales que <span class="math inline">\(g\left(n\right)\)</span>.</p>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="https://www.baeldung.com/wp-content/uploads/sites/4/2021/06/ogn-292x300-1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption margin-caption">Ejemplo gráfico de la notación Big-O.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En este gráfico, <span class="math inline">\(f\left(n\right)\)</span> es solo una de las posibles funciones que pertenecen al conjunto de funciones <span class="math inline">\(O\left(g\left(n\right)\right)\)</span>. Antes de <span class="math inline">\(n_0\)</span>, <span class="math inline">\(f\left(n\right)\)</span> no siempre es más pequeña que <span class="math inline">\(g\left(n\right)\)</span>, pero después de <span class="math inline">\(n_0\)</span> nunca sobrepasa a <span class="math inline">\(g\left(n\right)\)</span>.</p>
+<ul>
+<li>El signo <span class="math inline">\(\left(=\right)\)</span> en la expresión <span class="math inline">\(f\left(n\right)=O\left(g\left(n\right)\right)\)</span> es una representación asintótica la cuál da a entender que cuando <span class="math inline">\(n\)</span> se hace muy grande, <span class="math inline">\(f\left(n\right)\)</span> y <span class="math inline">\(g\left(n\right)\)</span> crecen a la misma velocidad.</li>
+</ul>
+<p>Por ejemplo, <span class="math inline">\(3n^3=O\left(n^3\right)\)</span> mientras que <span class="math inline">\(3n\ne O\left(n^3\right)\)</span>.</p>
+<div class="cell page-columns page-full" data-layout-align="center">
+<div class="cell-output-display page-columns page-full">
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="../images/ogrande2.png" class="img-fluid figure-img" style="width:30.0%"></p>
+<figcaption class="figure-caption margin-caption">Ejemplo gráfico de la notación Big-O.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Para verificar que <span class="math inline">\(f\left(n\right) = O\left(g\left(n\right)\right)\)</span>, debe existir al menor una constante <span class="math inline">\(c\)</span> con la cuál se cumpla la siguiente desigualdad: <span class="math display">\[\left|f\left(n\right)\right|\leq c\left|g\left(n\right)\right| \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0.\]</span></p>
+</section>
+<section id="notación-o-1" class="level3">
+<h3 class="anchored" data-anchor-id="notación-o-1">Notación <span class="math inline">\(o\)</span></h3>
+<p>La notación <span class="math inline">\(o\)</span> es usadapara denotar una cota superior que no es asintóticamente “ajustada”, o sea es estrictamente menor.</p>
+<p>Para una función dada <span class="math inline">\(g\left(n\right)\)</span>, <span class="math inline">\(o\left(g\left(n\right)\right)\)</span> se define como sigue:</p>
+<p><span class="math display">\[o\left(g\left(n\right)\right) = \left\{f\left(n\right): \textrm{para cualquier constante postivia} \hspace{0.2cm} c, \hspace{0.2cm} \textrm{existe una constante positiva} \hspace{0.2cm} n_0 \hspace{0.2cm} \textrm{tal que} \hspace{0.2cm} 0 \leq f\left(n\right) &lt; cg\left(n\right) \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0 \right\}\]</span> En esta definición, el conjunto de funciones <span class="math inline">\(f\left(n\right)\)</span> son estrictamente más pequeñas que <span class="math inline">\(cg\left(n\right)\)</span>, por lo cuál la notación <span class="math inline">\(o\)</span> es una cpta superior más fuerte que la notación <span class="math inline">\(O\)</span>.</p>
+<ul>
+<li>La notaci;on <span class="math inline">\(o\)</span> no permite que la función <span class="math inline">\(f\left(n\right)\)</span> tenga la misma velocidad de crecimiento que <span class="math inline">\(g\left(n\right)\)</span>.</li>
+</ul>
+<p>Esto significa que a medida que <span class="math inline">\(n\)</span> se hace grande, <span class="math inline">\(f\left(n\right)\)</span> se vuelve insignificante respecto a <span class="math inline">\(g\left(n\right)\)</span>, es decir:</p>
+<p><span class="math display">\[\lim_{n \to \infty} \frac{f\left(n\right)}{g\left(n\right)} = 0\]</span></p>
+<ul>
+<li><p>En la definición de la notación <span class="math inline">\(o\)</span>, la desigualdad debe cumplirse para cualquier constante <span class="math inline">\(c\)</span>, mientras que en la notación <span class="math inline">\(O\)</span>, es suficiente que algún <span class="math inline">\(c\)</span> satisfaga la desigualdad.</p></li>
+<li><p>Haciendo una analogía con números reales <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> es algo así como: <span class="math inline">\(f\left(n\right)=O\left(g\left(n\right)\right) \approx a\leq b\)</span> mientras que <span class="math inline">\(f\left(n\right)=o\left(g\left(n\right)\right) \approx a &lt; b\)</span>.</p></li>
+</ul>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
@@ -683,7 +743,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/estadisticaun\.github\.io\/Memoria");
+      var filterRegex = new RegExp("https:\/\/c-mario\.github\.io\/Semestre2023-2\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }

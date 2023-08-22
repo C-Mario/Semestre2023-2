@@ -1,13 +1,13 @@
 ---
-title: "Estimación histograma de la densidad"
+title: "Capítulo 1 del curso"
 ---
+
+## Estimación histograma de la densidad
 
 \newcommand{\lr}[1]{\left(#1\right)}
 \newcommand{\var}[1]{\textrm{Var}\left[#1\right]}
 \newcommand{\esp}[1]{\textrm{E}\left[#1\right]}
 \newcommand{\rm}[1]{\textrm{#1}}
-
-
 
 La idea es que una variable aleatoria tiene un proceso o función de densidad subyacente la cuál genera los datos que tendremos finalmente a disposición. Dada una variable aleatoria $X$, entonces $X \sim f\left(x;\theta\right)$. En el caso paramétrico la estimación de la función de densidad estaría dada por $\hat f \left(x;\theta\right) = f\left(x;\hat{\theta}\right)$ asumiendo que la población de la cuál provienen los datos sigue una distribución conocida con función de densidad $f$.
 
@@ -90,3 +90,67 @@ Dado que el estimador histograma de la densidad depende de la amplitud $b$ del i
 y despejando, se tiene que:
 
 $$\underbrace{\esp{\lr{\hat b - b}^2}}_{\rm{MSE}} = \var{\hat b} + \underbrace{\lr{\esp{\hat b}-b}^2}_{\textrm{BIAS}^2}$$
+
+## Notación $O$ y $o$ de Landau
+
+### Notación $O$
+
+$\textrm{Big}-O$ es una notación matemática para describir el comportamiento asintótico de una función, cuando su argumento tiende a un valor en particular o al infinito. Su uso en la computación es análogo, se usa para medir la complejidad de los algoritmos; es decir, la cantidad de operaciones que le toma a un algoritmo realizar internamente para arrojar el resultado final dada una entrada particular del algoritmo.
+
+Por ejemplo, cuando un algoritmo es $O\lr{n^2}$, se dice que es cuadrático en tiempo y se sabe que estaría en el orden de realizar $n^2$ operaciones para procesar una entrada de tamaño $n$.
+
+Para una función dada $g\lr{n}$, $O\lr{g\lr{n}}$ se define como sigue:
+
+$$O\lr{g\lr{n}} = \left\{f\lr{n}: \textrm{existen constantes positivas} \hspace{0.2cm} c \hspace{0.2cm} \textrm{y} \hspace{0.2cm} n_0 \hspace{0.2cm} \textrm{tales que} \hspace{0.2cm} 0 \leq f\lr{n} \leq cg\lr{n} \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0 \right\}$$
+Esto quiere decir que $O\lr{g\lr{n}}$ es un conjunto de funciones que después de $n_0$ son más pequeñas o a lo sumo iguales que $g\lr{n}$.
+
+```{r}
+#| label: ogrande
+#| echo: false
+#| out-width: ~
+#| fig-cap: |
+#|   Ejemplo gráfico de la notación Big-O.
+#| fig-align: center
+#| fig-cap-location: margin
+knitr::include_graphics("https://www.baeldung.com/wp-content/uploads/sites/4/2021/06/ogn-292x300-1.png", dpi = 270)
+```
+En este gráfico, $f\lr{n}$ es solo una de las posibles funciones que pertenecen al conjunto de funciones $O\lr{g\lr{n}}$. Antes de $n_0$, $f\lr{n}$ no siempre es más pequeña que $g\lr{n}$, pero después de $n_0$ nunca sobrepasa a $g\lr{n}$.
+
+- El signo $\lr{=}$ en la expresión $f\lr{n}=O\lr{g\lr{n}}$ es una representación asintótica la cuál da a entender que cuando $n$ se hace muy grande, $f\lr{n}$ y $g\lr{n}$ crecen a la misma velocidad.
+
+Por ejemplo, $3n^3=O\lr{n^3}$ mientras que $3n\ne O\lr{n^3}$.
+
+```{r}
+#| label: ogrande2
+#| echo: false
+#| out-width: ~
+#| fig-cap: |
+#|   Ejemplo gráfico de la notación Big-O.
+#| fig-align: center
+#| fig-cap-location: margin
+#| out.width: "30%"
+knitr::include_graphics("C:/Users/dofca/Desktop/libro/images/ogrande2.png", dpi = 270)
+```
+
+Para verificar que $f\lr{n} = O\lr{g\lr{n}}$, debe existir al menor una constante $c$ con la cuál se cumpla la siguiente desigualdad:
+$$\left|f\lr{n}\right|\leq c\left|g\lr{n}\right| \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0.$$
+
+### Notación $o$
+
+La notación $o$ es usadapara denotar una cota superior que no es asintóticamente "ajustada", o sea es estrictamente menor.
+
+Para una función dada $g\lr{n}$, $o\lr{g\lr{n}}$ se define como sigue:
+
+$$o\lr{g\lr{n}} = \left\{f\lr{n}: \textrm{para cualquier constante postivia} \hspace{0.2cm} c, \hspace{0.2cm} \textrm{existe una constante positiva} \hspace{0.2cm} n_0 \hspace{0.2cm} \textrm{tal que} \hspace{0.2cm} 0 \leq f\lr{n} < cg\lr{n} \hspace{0.2cm} \forall \hspace{0.2cm} n \geq n_0 \right\}$$
+En esta definición, el conjunto de funciones $f\lr{n}$ son estrictamente más pequeñas que $cg\lr{n}$, por lo cuál la notación $o$ es una cpta superior más fuerte que la notación $O$.
+
+- La notaci;on $o$ no permite que la función $f\lr{n}$ tenga la misma velocidad de crecimiento que $g\lr{n}$.
+
+Esto significa que a medida que $n$ se hace grande, $f\lr{n}$ se vuelve insignificante respecto a $g\lr{n}$, es decir:
+
+$$\lim_{n \to \infty} \frac{f\lr{n}}{g\lr{n}} = 0$$
+
+- En la definición de la notación $o$, la desigualdad debe cumplirse para cualquier constante $c$, mientras que en la notación $O$, es suficiente que algún $c$ satisfaga la desigualdad.
+
+- Haciendo una analogía con números reales $a$ y $b$ es algo así como:
+$f\lr{n}=O\lr{g\lr{n}} \approx a\leq b$ mientras que $f\lr{n}=o\lr{g\lr{n}} \approx a < b$.
