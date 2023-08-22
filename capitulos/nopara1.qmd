@@ -154,3 +154,5 @@ $$\lim_{n \to \infty} \frac{f\lr{n}}{g\lr{n}} = 0$$
 
 - Haciendo una analogía con números reales $a$ y $b$ es algo así como:
 $f\lr{n}=O\lr{g\lr{n}} \approx a\leq b$ mientras que $f\lr{n}=o\lr{g\lr{n}} \approx a < b$.
+
+ahora veamos esto:
