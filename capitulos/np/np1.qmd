@@ -4,12 +4,6 @@ title: "Capítulo 1 del curso"
 
 ## Estimación histograma de la densidad
 
-```{=tex}
-\newcommand{\lr}[1]{\left(#1\right)}
-\newcommand{\var}[1]{\textrm{Var}\left[#1\right]}
-\newcommand{\esp}[1]{\textrm{E}\left[#1\right]}
-\newcommand{\rm}[1]{\textrm{#1}}
-```
 
 La idea es que una variable aleatoria tiene un proceso o función de densidad subyacente la cuál genera los datos que tendremos finalmente a disposición. Dada una variable aleatoria $X$, entonces $X \sim f\left(x;\theta\right)$. En el caso paramétrico la estimación de la función de densidad estaría dada por $\hat f \left(x;\theta\right) = f\left(x;\hat{\theta}\right)$ asumiendo que la población de la cuál provienen los datos sigue una distribución conocida con función de densidad $f$.
 

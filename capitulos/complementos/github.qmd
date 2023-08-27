@@ -2,7 +2,7 @@
 title: GitHub
 ---
 
-###### Hacer push una vez se hacen cambios en el repositorio local
+$\lr{1}\hspace{0.2cm} \textrm{Hacer push una vez se hacen cambios en el repositorio local}$ 
 
 ```{r}
 #| echo: true
@@ -12,8 +12,7 @@ git commit -m "cambio"
 git push origin main
 ```
 
-
-###### Volver a una versión anterior del repositorio en los repositorios local y remoto
+$\lr{2}\hspace{0.2cm} \textrm{Volver a una versión anterior del repositorio en los repositorios local y remoto}$ 
 
 ```{r}
 #| echo: true
@@ -25,11 +24,10 @@ git commit -m "cambio"
 git push origin main
 ```
 
-###### Ver la rama actual, y las demás ramas
+$\lr{3}\hspace{0.2cm} \textrm{Ver la rama actual, y las demás ramas}$ 
 
 ```{r}
 #| echo: true
 #| eval: false
 git branch
 ```
-

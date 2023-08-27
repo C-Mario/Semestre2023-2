@@ -11,7 +11,7 @@
     "href": "capitulos/complementos/github.html",
     "title": "GitHub",
     "section": "",
-    "text": "Hacer push una vez se hacen cambios en el repositorio local\n\ngit add .\ngit commit -m \"cambio\"\ngit push origin main\n\n\n\nVolver a una versión anterior del repositorio en los repositorios local y remoto\n\ngit reset --hard &lt;commit-hash&gt;\ngit push -f origin main\ngit add .\ngit commit -m \"cambio\"\ngit push origin main\n\n\n\nVer la rama actual, y las demás ramas\n\ngit branch\n\n\n\n\n\n Volver arriba"
+    "text": "\\(\\lr{1}\\hspace{0.2cm} \\textrm{Hacer push una vez se hacen cambios en el repositorio local}\\)\n\ngit add .\ngit commit -m \"cambio\"\ngit push origin main\n\n\\(\\lr{2}\\hspace{0.2cm} \\textrm{Volver a una versión anterior del repositorio en los repositorios local y remoto}\\)\n\ngit reset --hard &lt;commit-hash&gt;\ngit push -f origin main\ngit add .\ngit commit -m \"cambio\"\ngit push origin main\n\n\\(\\lr{3}\\hspace{0.2cm} \\textrm{Ver la rama actual, y las demás ramas}\\)\n\ngit branch\n\n\n\n\n Volver arriba"
   },
   {
     "objectID": "capitulos/np/np1.html",

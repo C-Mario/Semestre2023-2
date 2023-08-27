@@ -102,6 +102,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 \def\cl{\mathcal}
 $$
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 
 
@@ -230,16 +232,13 @@ $$
 
 </header>
 
-<section id="hacer-push-una-vez-se-hacen-cambios-en-el-repositorio-local" class="level6">
-<h6 class="anchored" data-anchor-id="hacer-push-una-vez-se-hacen-cambios-en-el-repositorio-local">Hacer push una vez se hacen cambios en el repositorio local</h6>
+<p><span class="math inline">\(\lr{1}\hspace{0.2cm} \textrm{Hacer push una vez se hacen cambios en el repositorio local}\)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>git add .</span>
 <span id="cb1-2"><a href="#cb1-2"></a>git commit <span class="sc">-</span>m <span class="st">"cambio"</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>git push origin main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="volver-a-una-versión-anterior-del-repositorio-en-los-repositorios-local-y-remoto" class="level6">
-<h6 class="anchored" data-anchor-id="volver-a-una-versión-anterior-del-repositorio-en-los-repositorios-local-y-remoto">Volver a una versión anterior del repositorio en los repositorios local y remoto</h6>
+<p><span class="math inline">\(\lr{2}\hspace{0.2cm} \textrm{Volver a una versión anterior del repositorio en los repositorios local y remoto}\)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>git reset <span class="sc">--</span>hard <span class="sc">&lt;</span>commit<span class="sc">-</span>hash<span class="sc">&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>git push <span class="sc">-</span>f origin main</span>
@@ -247,15 +246,12 @@ $$
 <span id="cb2-4"><a href="#cb2-4"></a>git commit <span class="sc">-</span>m <span class="st">"cambio"</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a>git push origin main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="ver-la-rama-actual-y-las-demás-ramas" class="level6">
-<h6 class="anchored" data-anchor-id="ver-la-rama-actual-y-las-demás-ramas">Ver la rama actual, y las demás ramas</h6>
+<p><span class="math inline">\(\lr{3}\hspace{0.2cm} \textrm{Ver la rama actual, y las demás ramas}\)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>git branch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
