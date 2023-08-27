@@ -1,0 +1,35 @@
+---
+title: GitHub
+---
+
+###### Hacer push una vez se hacen cambios en el repositorio local
+
+```{r}
+#| echo: true
+#| eval: false
+git add .
+git commit -m "cambio"
+git push origin main
+```
+
+
+###### Volver a una versión anterior del repositorio en los repositorios local y remoto
+
+```{r}
+#| echo: true
+#| eval: false
+git reset --hard <commit-hash>
+git push -f origin main
+git add .
+git commit -m "cambio"
+git push origin main
+```
+
+###### Ver la rama actual, y las demás ramas
+
+```{r}
+#| echo: true
+#| eval: false
+git branch
+```
+

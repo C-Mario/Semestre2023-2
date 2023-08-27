@@ -1,5 +1,0 @@
----
-title: "Introducción"
----
-
-esto es series de tiempo!

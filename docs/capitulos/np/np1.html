@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Semestre 2023-2 - 2&nbsp; Capítulo 1 del curso</title>
+<title>Semestre - Capítulo 1 del curso</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,33 +57,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../capitulos/bd1.html" rel="next">
-<link href="../capitulos/series1.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
-  "copy-button": true,
-  "collapse-after": 2,
+  "copy-button": false,
+  "collapse-after": 3,
   "panel-placement": "end",
-  "type": "textbox",
-  "limit": 10,
+  "type": "overlay",
+  "limit": 20,
   "language": {
     "search-no-results-text": "Ninguna coincidencia",
     "search-matching-documents-text": "coincidencias",
@@ -96,24 +92,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": ""
   }
 }</script>
+</head><body class="nav-fixed slimcontent">$$
+\newcommand{\lr}[1]{\left(#1\right)}
+\newcommand{\var}[1]{\textrm{Var}\left[#1\right]}
+\newcommand{\esp}[1]{\textrm{E}\left[#1\right]}
+\newcommand{\rm}[1]{\textrm{#1}}
+\def\bb{\mathbb}
+\def\bf{\mathbf}
+\def\cl{\mathcal}
+$$
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-</head>
 
-<body class="nav-sidebar docked nav-fixed slimcontent">
+
+
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/logo2.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/logo2.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Semestre 2023-2</span>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Semestre</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Buscar"></div>
@@ -123,113 +128,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://unal.edu.co" rel="" target="_blank"><i class="bi bi-bank2" role="img">
-</i> 
- <span class="menu-text">UNAL</span></a>
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">Inicio</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-no-paramétrica" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">No paramétrica</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-no-paramétrica">    
+        <li>
+    <a class="dropdown-item" href="../../capitulos/np/np1.html" rel="" target="">
+ <span class="dropdown-text">Capitulo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../capitulos/np/np1.html" rel="" target="">
+ <span class="dropdown-text">Capitulo 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-series-de-tiempo" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Series de tiempo</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-series-de-tiempo">    
+        <li>
+    <a class="dropdown-item" href="../../capitulos/st/st1.html" rel="" target="">
+ <span class="dropdown-text">Capitulo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../capitulos/st/st1.html" rel="" target="">
+ <span class="dropdown-text">Capitulo 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-bases-de-datos" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Bases de datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-bases-de-datos">    
+        <li>
+    <a class="dropdown-item" href="../../capitulos/bd/bd1.html" rel="" target="">
+ <span class="dropdown-text">GitHub</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../capitulos/bd/bd1.html" rel="" target="">
+ <span class="dropdown-text">aa</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-complementos" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Complementos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-complementos">    
+        <li>
+    <a class="dropdown-item" href="../../capitulos/complementos/github.html" rel="" target="">
+ <span class="dropdown-text">GitHub</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../capitulos/complementos/github.html" rel="" target="">
+ <span class="dropdown-text">Capitulo 2</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://github.com/C-Mario/Semestre2023-2" rel="" target="_blank"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/C-Mario/series" rel="" target="_blank"><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text">GitHub</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Activar modo oscuro"><i class="bi"></i></a>
-  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Activar modo lectura">
-  <div class="quarto-reader-toggle-btn">
-  <i class="bi"></i>
-  </div>
-</a>
+            <div class="quarto-navbar-tools">
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../capitulos/nopara1.html">Métodos no paramétricos</a></li><li class="breadcrumb-item"><a href="../capitulos/nopara1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Buscar"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Portada</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Series de tiempo</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../capitulos/series1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Métodos no paramétricos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../capitulos/nopara1.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Bases de datos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../capitulos/bd1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -242,7 +220,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#notación-o" id="toc-notación-o" class="nav-link" data-scroll-target="#notación-o">Notación <span class="math inline">\(O\)</span></a></li>
   <li><a href="#notación-o-1" id="toc-notación-o-1" class="nav-link" data-scroll-target="#notación-o-1">Notación <span class="math inline">\(o\)</span></a></li>
+  <li><a href="#ejemplos" id="toc-ejemplos" class="nav-link" data-scroll-target="#ejemplos">Ejemplos</a></li>
   </ul></li>
+  <li><a href="#serie-de-taylor" id="toc-serie-de-taylor" class="nav-link" data-scroll-target="#serie-de-taylor">Serie de Taylor</a></li>
   </ul>
 </nav>
     </div>
@@ -251,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1 del curso</span></h1>
+<h1 class="title">Capítulo 1 del curso</h1>
 </div>
 
 
@@ -277,23 +257,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>El primer enfonque es realizar la estimación de la función de densidad usando la <strong>estimación histograma de la densidad</strong>. Por ejemplo, si se tienen 100 datos cuyo histograma de frecuencias absolutas está dado por:</p>
 <div class="cell">
-<details open="">
-<summary>Código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">hist</span>(x, <span class="at">freq=</span><span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"#42A5F5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
-<p><img src="nopara1_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<p><img src="np1_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>La estimación histograma de la densidad dados estos 100 datos es el siguiente:</p>
 <div class="cell">
-<details open="">
-<summary>Código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">hist</span>(x, <span class="at">freq=</span><span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"#42A5F5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
-<p><img src="nopara1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="np1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Para realizar la estimación se tiene en cuenta lo siguiente:</p>
@@ -334,10 +308,10 @@ x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
 <section id="propiedades-del-estimador-histograma" class="level2">
 <h2 class="anchored" data-anchor-id="propiedades-del-estimador-histograma">Propiedades del estimador histograma</h2>
 <p>Dado que el estimador histograma de la densidad depende de la amplitud <span class="math inline">\(b\)</span> del intervalo, la idea es escoger el valor de la amplitud que minimice el <span class="math inline">\(\textrm{MSE}\)</span> para así poder encontrar una estimación más exacta de la función de densidad subyacente a la población en cuestión.</p>
-<p><span class="math display">\[\begin{align}
+<span class="math display">\[\begin{align}
 \textrm{Var}\left[\hat b - b\right] &amp;= \textrm{E}\left[\left(\hat b - b\right)^2\right] - \left(\textrm{E}\left[\hat b - b\right]\right)^2\\
 \textrm{Var}\left[\hat b\right] &amp;= \underbrace{\textrm{E}\left[\left(\hat b - b\right)^2\right]}_{\textrm{MSE}} - \underbrace{\left(\textrm{E}\left[\hat b\right]-b\right)^2}_{\textrm{BIAS}^2}\\
-\end{align}\]</span></p>
+\end{align}\]</span>
 <p>y despejando, se tiene que:</p>
 <p><span class="math display">\[\underbrace{\textrm{E}\left[\left(\hat b - b\right)^2\right]}_{\textrm{MSE}} = \textrm{Var}\left[\hat b\right] + \underbrace{\left(\textrm{E}\left[\hat b\right]-b\right)^2}_{\textrm{BIAS}^2}\]</span></p>
 </section>
@@ -368,7 +342,7 @@ x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
 <div class="cell-output-display page-columns page-full">
 <div class="quarto-figure quarto-figure-center page-columns page-full">
 <figure class="figure page-columns page-full">
-<p><img src="../images/ogrande2.png" class="img-fluid figure-img" style="width:30.0%"></p>
+<p><img src="../../images/ogrande2.png" class="img-fluid figure-img" style="width:30.0%"></p>
 <figcaption class="figure-caption margin-caption">Ejemplo gráfico de la notación Big-O.</figcaption>
 </figure>
 </div>
@@ -390,10 +364,50 @@ x-\frac{b}{2} \leq x_i \leq x+&amp;\frac{b}{2}\\
 <li><p>En la definición de la notación <span class="math inline">\(o\)</span>, la desigualdad debe cumplirse para cualquier constante <span class="math inline">\(c\)</span>, mientras que en la notación <span class="math inline">\(O\)</span>, es suficiente que algún <span class="math inline">\(c\)</span> satisfaga la desigualdad.</p></li>
 <li><p>Haciendo una analogía con números reales <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> es algo así como: <span class="math inline">\(f\left(n\right)=O\left(g\left(n\right)\right) \approx a\leq b\)</span> mientras que <span class="math inline">\(f\left(n\right)=o\left(g\left(n\right)\right) \approx a &lt; b\)</span>.</p></li>
 </ul>
-<p>ahora veamos esto:</p>
-
-
 </section>
+<section id="ejemplos" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplos">Ejemplos</h3>
+<ul>
+<li>Comprobar si <span class="math inline">\(3x^2 + 25 = O\left(x^2\right)\)</span></li>
+</ul>
+<span class="math display">\[\begin{align*}
+&amp; 3x^2 + 25 \leq 3x^2 + 25x^2\\
+&amp; \left|3x^2 + 25\right| \leq \left|28x^2\right|\\
+&amp; \left|3x^2 + 25\right| \leq 28\left|x^2\right|, \hspace{0.2cm} x&gt;1.
+\end{align*}\]</span>
+<p>en este caso, es como si <span class="math inline">\(c = 28\)</span> y <span class="math inline">\(n_0 = 1\)</span>.</p>
+<ul>
+<li>Comprobar si <span class="math inline">\(2x^9 + 1 = o\left(x^{10}\right)\)</span></li>
+</ul>
+<span class="math display">\[\begin{align*}
+\lim_{x \to \infty}\frac{f\left(x\right)}{g\left(x\right)} &amp;= \lim_{x \to \infty}\frac{2x^9 + 1}{x^{10}}\\
+&amp;= \lim_{x \to \infty} \frac{2x^9}{x^{10}} + \frac{1}{x^{10}}\\
+&amp;= 0
+\end{align*}\]</span>
+</section>
+</section>
+<section id="serie-de-taylor" class="level2">
+<h2 class="anchored" data-anchor-id="serie-de-taylor">Serie de Taylor</h2>
+<p>La serie de Taylor de una función real o compleja <span class="math inline">\(f\left(x\right)\)</span> infinitamente diferenciable en el entorno de un número real o complejo <span class="math inline">\(a\)</span> es la siguiente serie de potencias:</p>
+<p><span class="math display">\[f\left(x\right) = f\left(a\right) + \frac{f^\prime\left(a\right)}{1!}\left(x-a\right) +
+                      \frac{f^{\prime\prime}\left(a\right)}{2!}\left(x-a\right)^2 +
+                      \frac{f^{\prime\prime\prime}\left(a\right)}{3!}\left(x-a\right)^3 + \cdots +
+                      \frac{f^{\left(n\right)}\left(a\right)}{n!}\left(x-a\right)^n + \cdots\]</span></p>
+<p>Si <span class="math inline">\(f\left(x\right)\)</span> en diferenciable <span class="math inline">\(n\)</span> veces en torno a <span class="math inline">\(a\)</span>, entonces:</p>
+<p><span class="math display">\[f\left(x\right) = f\left(a\right) + \frac{f^\prime\left(a\right)}{1!}\left(x-a\right) +
+                      \frac{f^{\prime\prime}\left(a\right)}{2!}\left(x-a\right)^2 +
+                      \frac{f^{\prime\prime\prime}\left(a\right)}{3!}\left(x-a\right)^3 + \cdots +
+                      \frac{f^{\left(n\right)}\left(a\right)}{n!}\left(x-a\right)^n + R_{n,a}\left(x\right)\]</span></p>
+<p>donde <span class="math inline">\(R_{n,a}\left(x\right)\)</span> es el residuo de orden <span class="math inline">\(n\)</span> o error de aproximación.</p>
+<p><span class="math display">\[R_{n,a}\left(x\right) = \frac{f^{\left(n+1\right)}\left(c\right)}{\left(n+1\right)!}\left(x-a\right)^{n+1} \hspace{0.2cm} \textrm{para algún} \hspace{0.2cm} c \hspace{0.2cm} \textrm{entre} \hspace{0.2cm} a \hspace{0.2cm} \textrm{y} \hspace{0.2cm} x.\]</span> En este caso, la notación <span class="math inline">\(O\)</span> estudia el comportamiento de la función <span class="math inline">\(f\)</span> alrededor de un punto <span class="math inline">\(\left(a\right)\)</span>. Se define entonces que <span class="math inline">\(f\left(x\right)=O\left(g\left(x\right)\right)\)</span> si existe <span class="math inline">\(\varepsilon &gt; 0\)</span> y una constante <span class="math inline">\(x &gt; 0\)</span> tal que $|x| implique que <span class="math inline">\(\left|f\left(x\right)\right| \leq c\left|g\left(x\right)\right|\)</span>.</p>
+<p>Así, <span class="math inline">\(f\left(x\right)\)</span> puede escribirse como:</p>
+<p><span class="math display">\[f\left(x\right) = f\left(a\right) + \frac{f^\prime\left(a\right)}{1!}\left(x-a\right) +
+                      \frac{f^{\prime\prime}\left(a\right)}{2!}\left(x-a\right)^2 +
+                      \frac{f^{\prime\prime\prime}\left(a\right)}{3!}\left(x-a\right)^3 + \cdots +
+                      \frac{f^{\left(n\right)}\left(a\right)}{n!}\left(x-a\right)^n +
+                      O\left(\left(x-a\right)^3\right).\]</span></p>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
@@ -417,121 +431,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  let localAlternateSentinel = 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -743,44 +642,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/c-mario\.github\.io\/Semestre2023-2\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          // default icon
-          link.classList.add("external");
-      }
-    }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../capitulos/series1.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../capitulos/bd1.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introducción</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">Universidad Nacional de Colombia.</div>   
-    <div class="nav-footer-center">2018 - 2021</div>
-    <div class="nav-footer-right">Este libro fue construido con <a href="https://quarto.org/">Quarto</a>.</div>
-  </div>
-</footer>
 
 
 

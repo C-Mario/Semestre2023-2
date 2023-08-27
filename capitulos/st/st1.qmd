@@ -1,0 +1,15 @@
+---
+title: "Series de tiempo"
+---
+
+## Procesos estocásticos
+
+- Una sucesión de variables aleatorias $\left\{X_t\right\}$ definidas sobre el mismo espacio de probabilidad $\lr{\Omega,\cl{F},P}$ es un proceso estocástico. El índice $t$ denota el tiempo y además, $t \in \cl{T} \subset \cl{R}$.
+
+- Si $\cl{T}$ es un conjunto discreto o enumerable, entonces el proceso estocástico es en tiempo discreto. El caso contrario, el proceso estocástico es en tiempo continuo.
+
+- Es frecuente que al proceso estocástico $\left\{X_t\right\}$ se le llame serie de tiempo. De igual manera, se le llama serie de tiempo a la realización del proceso estocástico $\left\{x_t\right\}$.
+
+### Proceso estocástico estacionario
+
+
