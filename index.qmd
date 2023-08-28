@@ -5,9 +5,8 @@ about:
   template: solana
   image-shape: rectangle
   image-width: 25em
-
 ---
 
 Aquí se alojara todo lo correspondiente al semestre 2023-2 cursado en la Universidad Nacional de Colombia.
 
-En la imagen de portada: **Manami** de *Yowamushi pedal.*
+En la imagen de portada: $\textbf{Manami}$ de *Yowamushi pedal.*

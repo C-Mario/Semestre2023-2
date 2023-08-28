@@ -1,3 +1,5 @@
 ---
-title: "Introducción"
+title: "Bases de datos"
 ---
+
+$\textrm{Bases de datos relacionales}$

@@ -2,9 +2,9 @@
   {
     "objectID": "capitulos/bd/bd1.html",
     "href": "capitulos/bd/bd1.html",
-    "title": "Introducción",
+    "title": "Bases de datos",
     "section": "",
-    "text": "Volver arriba"
+    "text": "\\(\\textrm{Bases de datos relacionales}\\)\n\n\n\n Volver arriba"
   },
   {
     "objectID": "capitulos/complementos/github.html",
@@ -67,6 +67,6 @@
     "href": "index.html",
     "title": "Portada",
     "section": "",
-    "text": "Aquí se alojara todo lo correspondiente al semestre 2023-2 cursado en la Universidad Nacional de Colombia.\nEn la imagen de portada: Manami de Yowamushi pedal.\n\n\n Volver arriba"
+    "text": "Aquí se alojara todo lo correspondiente al semestre 2023-2 cursado en la Universidad Nacional de Colombia.\nEn la imagen de portada: \\(\\textbf{Manami}\\) de Yowamushi pedal.\n\n\n Volver arriba"
   }
 ]
