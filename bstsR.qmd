@@ -1,0 +1,796 @@
+---
+title: "Proyecciones de Demanda de Gas Natural en el sector residencial 2023-2027"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+embed-resources: true
+page-layout: full
+fig-align: center
+fig-width: 9
+fig-height: 6
+---
+
+Cargue de librerías:
+
+```{r}
+#| code-fold: true
+#| output: false
+rm(list=ls())
+library(readxl)
+library(xlsx)
+library(openxlsx)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(tidyr)
+library(TSstudio)
+library(ggfortify)
+library(ggplot2)
+library(latex2exp)
+library(gridExtra)
+library(Polychrome)
+library(imputeTS)
+library(grid)
+library(tsoutliers)
+library(forecast)
+library(fpp2)
+library(bsts)
+library(plotly)
+options(scipen=15)
+P28 = createPalette(28,  c("#009ACD", "#CD2626", "#00CD00"))
+```
+
+## Explorando los datos
+
+Los datos de la demanda de Gas Natural (Consumo) está disponible de forma mensual desde Enero de 2005 hasta Diciembre de 2022. La información originalmente está disponible por municipio, pero este análisis se realizará de forma agregada a nivel país.
+
+El horizonte temporal de las proyecciones será 2023-2027 (5 años).
+
+Se usará la información agregada por Departamento con el fin de realizar un tratamiento más adecuado de datos faltantes y atípicos, pero finalmente las proyecciones serán a nivel país.
+
+Importación de la base de datos descargada del **SUI**. Cada registro aquí consignado corresponde a la información consolidada por Departamento en el respectivo mes. De esta base de datos, se tendrán en cuenta las siguientes variables:
+  
+  - ***Consumo:*** Corresponde al consumo (demanda) histórico de Gas Natural. Está medido en $m^3$.
+- ***Suscriptores:*** Número de conexiones residenciales
+- ***PrecioGas:*** Precio del $m^3$ de Gas Natural consumido. Está medido en $\$/m^3$.
+- ***Subsidios:*** Subsidios otorgados a los estratos 1 y 2. Está medido en $\$$.
+- ***Contribuciones:*** Contribuciones de los estratos 5 y 6. Está medido en $\$$.
+- ***Municipios***: Número de municipios con cobertura de Gas Natural.
+- ***Facturación***: Total facturado por el consumo. Está medido en $\$$. Esta variable solo será usada para calcular el precio del Gas Natural a nivel país.
+
+```{r}
+#| code-fold: true
+datos <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/Demanda.xlsx")
+datos <- datos |> select(Mes = MES, Departamento, Municipio, Consumo = `Consumo total (m3)`,
+                         Suscriptores = `Numero de suscriptores`, PrecioGas = `Valor Real por m3 consumido ($/m3)`,
+                         Subsidios = `Subsidios ($)`, Contribuciones = `Contribuciones ($)`, Municipios = `Numero de Municipios`,
+                         Facturacion = `Facturación por consumo ($)`) |> 
+  filter(grepl("^(05-|08-|11-|13-|15-|17-|18-|19-|20-|23-|25-|27-|41-|44-|47-|50-|52-|54-|63-|66-|68-|70-|73-|76-|81-|85-|86-|95-)",Municipio)) |> 
+  select(-Municipio) |> separate(Departamento, c('CoDep', 'Departamento'), sep = "-") |> 
+  filter(Mes <= "2022-12-01") |> 
+  mutate(PrecioGas = round(as.numeric(PrecioGas)))
+```
+
+```{r}
+#| df-print: kable
+rmarkdown::paged_table(head(datos))
+```
+
+```{r}
+#| df-print: kable
+rmarkdown::paged_table(tail(datos))
+```
+
+## Análisis y Exploración de los datos
+
+### Evolución del Consumo de Gas Natural a nivel País
+
+A continuación se muestra el comportamiento del consumo de Gas Natural y de las demás variables en la ventana de tiempo disponible:
+  
+```{r}
+#| code-fold: true
+
+Pais <- datos |>
+  group_by(Mes) |>
+  summarise(Consumo = sum(Consumo), Suscriptores = sum(Suscriptores), PrecioGas = sum(Facturacion)/sum(Consumo),
+            Subsidios = sum(Subsidios), Contribuciones = sum(Contribuciones), Municipios = sum(Municipios)) |> 
+  select(-Mes)
+
+Pais_Ylabs <- c("\\textrm{Demanda} $(m^3)$", "\\textrm{N. de suscriptores}", "\\textrm{Precio del gas} $\\$/m^3$", "\\textrm{Subsidios} $(\\$)$", "\\textrm{Contribuciones} $(\\$)$", "\\textrm{N. de municipios}")
+Pais_Titulos <- c("\\textrm{Demanda}", "\\textrm{Número de suscriptores}", "\\textrm{Precio del gas}", "\\textrm{Subsidios}", "\\textrm{Contribuciones}", "\\textrm{Número de municipios}")
+
+Pais <- ts(Pais, start = 2005, frequency = 12)
+for(i in 1:6){
+  a = Pais[,i] |> autoplot(colour = 1, size = 1, alpha = 1) +
+    theme_grey(12) + ylab(latex2exp::TeX(Pais_Ylabs[i])) + xlab("Año") + 
+    ggtitle(latex2exp::TeX(Pais_Titulos[i]), "Ene 2005 - Dic 2022")
+  assign(paste("Pais", i, sep = "_"), a)
+}
+grid.arrange(Pais_1, Pais_2, Pais_3, Pais_4, Pais_5, Pais_6, nrow = 2, ncol = 3)
+```
+
+Se observa que tanto el Consumo (demanda) y todas las demás variables presentan un comportamiento de tendencia principalmente creciente en el tiempo. El Consumo tiende a crecer aunque también presenta periodos de reducción y de lento crecimiento.
+
+En total hay información de 216 meses (no hay datos faltantes). Sin embargo, se observa en los gráficos algunos cambios abruptos repentinamente. Mirando más a profundidad, hay algunos datos faltantes y datos atípicos a nivel municipal y/o departamental, lo cuál se refleja al agregar los datos a nivel país.
+
+Para darle un manejo a los datos faltantes y atípicos con el fin de conseguir que la información a nivel país sea más confiable, se analizará la información a nivel departamental con el fin de imputar los datos faltantes y darle un manejo a los datos atípicos.
+
+### Evolución del Consumo de Gas Natural por Departamento
+
+```{r}
+#| code-fold: true
+#| output: false
+
+# Departamentos ordenados de mayor a menor demanda total - para gráficos.
+DemandaTotal <- datos |> group_by(CoDep,Departamento) |>
+  summarise(Consumo = sum(Consumo)) |> arrange(desc(Consumo))
+CoDep2 <- DemandaTotal$CoDep
+Departamento2 <- DemandaTotal$Departamento
+
+Meses <- data.frame(Mes = unique(datos$Mes))
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+## Demanda por departamento  
+DemandaDepartamento <- datos |> select(Mes,CoDep,Departamento,Consumo)
+
+# Es necesario crear el objeto ts por cada departamento dependiendo de la
+# cantidad de datos disponible por departamento
+series <- list()
+for(i in 1:length(unique(DemandaDepartamento$CoDep))){
+  datosDep = DemandaDepartamento |> filter(CoDep==CoDep2[i])
+  datosDep = Meses |> left_join(datosDep, by="Mes") |> 
+    select(Consumo) |> ts(start = 2005, frequency = 12)
+  series[[i]] <- assign(Departamento2[i], datosDep)
+}
+
+Graficos_Demanda <- list()
+for(i in 1:length(unique(DemandaDepartamento$CoDep))){
+  Graficos_Demanda[[i]] <- series[[i]] |> 
+    autoplot(colour = P28[i], size = 1, alpha = 1) +
+    theme_gray(5) + ylab(TeX("\\textrm{Demanda en} $m^3$")) + xlab("Año") +
+    ggtitle(str_to_title(Departamento2[i]))
+}
+do.call(grid.arrange, c(Graficos_Demanda, nrow=7))
+```
+
+Se evidencia que hay departamentos que tienen datos faltantes en algunos meses puntualmente, mientras que hay otros en que la información inicia desde que el departamento empieza a tener cobertura de Gas Natural.
+
+```{r}
+#| code-fold: true
+
+sort(table(datos$Departamento), decreasing = TRUE)
+```
+
+El periodo ***Enero-2005 / Diciembre-2022*** comprende un total de 216 meses.
+
+- ***15*** departamentos cuentan con información completa.
+- ***Bogotá, Norte de Santander*** y ***Quindío*** cuentan con 1 dato faltante.
+- ***Córdoba*** y ***Sucre*** cuentan con 2 datos faltantes.
+- ***La Guajira*** cuenta con 5 datos faltantes.
+- ***Cauca, Caquetá, Nariño, Putumayo, Guaviare, Arauca*** y ***Chocó*** empiezan a incorporar información en años posteriores al 2005, pero no tienen datos faltantes.
+
+Estos datos faltantes en el Consumo de Gas Natural, también se presentan en las demás variables.
+
+Ahora, la idea es imputar los datos faltantes en cada serie de tiempo correspondiente a los departamentos de ***Bogotá, Norte de Santander, Quindío, Córdoba, Sucre*** y ***La Guajira***.
+
+A continuación se muestra la distribución de datos faltantes en las series de tiempo correspondientes al Consumo en los departamentos con datos faltantes.
+
+```{r}
+#| code-fold: true
+
+grid.arrange(ggplot_na_distribution(`BOGOTA, D.C.`, title = "", subtitle = "Bogotá D.C.", xlab = "Mes", ylab = "Consumo"), 
+             ggplot_na_distribution(`NORTE DE SANTANDER`, title = "", subtitle = "Norte de Santander", xlab = "Mes", ylab = "Consumo"),
+             ggplot_na_distribution(QUINDIO, title = "", subtitle = "Quindío", xlab = "Mes", ylab = "Consumo") ,            
+             ggplot_na_distribution(CORDOBA, title = "", subtitle = "Córdoba", xlab = "Mes", ylab = "Consumo"),
+             ggplot_na_distribution(SUCRE, title = "", subtitle = "Sucre", xlab = "Mes", ylab = "Consumo"),
+             ggplot_na_distribution(`LA GUAJIRA`, title = "", subtitle = "La Guajira", xlab = "Mes", ylab = "Consumo"),
+             ncol = 3, top = textGrob("Consumo: Distribución de datos faltantes", gp = gpar(fontsize=20,font=3))
+)
+```
+
+Y ahora se imputarán los datos faltantes en estas series de tiempo por medio de la función `na_kalman` de la librería **imputeTS**. La razón de usar `na_kalman` es porque estamos en el contexto de un modelo de series de tiempo estructurales. Los datos son imputados siguiendo el algoritmo del filtro de Kalman, usual en estos modelos.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+imp1 <- na_kalman(`BOGOTA, D.C.`)
+imp2 <- na_kalman(`NORTE DE SANTANDER`)
+imp3 <- na_kalman(QUINDIO)
+imp4 <- na_kalman(CORDOBA)
+imp5 <- na_kalman(SUCRE)
+imp6 <- na_kalman(`LA GUAJIRA`)
+```
+
+```{r}
+#| code-fold: true
+
+grid.arrange(ggplot_na_imputations(`BOGOTA, D.C.`, imp1, title = "", subtitle = "Bogotá D.C.", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados"), 
+             ggplot_na_imputations(`NORTE DE SANTANDER`, imp2, title = "", subtitle = "Norte de Santander", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados"),
+             ggplot_na_imputations(QUINDIO, imp3, title = "", subtitle = "Quindío", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados") ,            
+             ggplot_na_imputations(CORDOBA, imp4, title = "", subtitle = "Córdoba", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados"),
+             ggplot_na_imputations(SUCRE, imp5, title = "", subtitle = "Sucre", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados"),
+             ggplot_na_imputations(`LA GUAJIRA`, imp6, title = "", subtitle = "La Guajira", xlab = "Mes", ylab = "Consumo", label_known = "Observados", label_imputations = "Imputados"),
+             ncol = 3, top = textGrob("Consumo: Datos imputados", gp = gpar(fontsize=20,font=3))
+)
+```
+
+Se observa que los valores imputados parecen tener sentido de acuerdo al comportamiento de las series de tiempo correspondientes. La imputación se realizará de la misma forma para las demás variables en los mismos departamentos.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+SERIES <- function(variable){
+  series <- list()
+  for(i in 1:length(unique(datos$CoDep))){
+    datosDep = datos |> select(Mes,CoDep,Departamento,variable) |> filter(CoDep == CoDep2[i])
+    datosDep = Meses |> left_join(datosDep, by="Mes") |> 
+      select(variable) |> ts(start = 2005, frequency = 12)
+    series[[i]] = datosDep
+  }
+  return(series)
+}
+
+series_Consumo <- SERIES("Consumo")
+series_Suscriptores <- SERIES("Suscriptores")
+series_PrecioGas <- SERIES("PrecioGas")
+series_Subsidios <- SERIES("Subsidios")
+series_Contribuciones <- SERIES("Contribuciones")
+series_Municipios <- SERIES("Municipios")
+series_Facturacion <- SERIES("Facturacion")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+x <- c("BOGOTA, D.C.", "NORTE DE SANTANDER", "QUINDIO", "CORDOBA", "SUCRE", "LA GUAJIRA")
+x <- which(Departamento2 %in% x)
+
+#Se imputan los datos faltantes en todas las series de tiempo
+for(i in 1:length(x)){
+  series_Consumo[[x[i]]] <- na_kalman(series_Consumo[[x[i]]])
+  series_Suscriptores[[x[i]]] <- round(na_kalman(series_Suscriptores[[x[i]]]))
+  series_PrecioGas[[x[i]]] <- na_kalman(series_PrecioGas[[x[i]]])
+  series_Subsidios[[x[i]]] <- na_kalman(series_Subsidios[[x[i]]])
+  series_Contribuciones[[x[i]]] <- na_kalman(series_Contribuciones[[x[i]]])
+  series_Municipios[[x[i]]] <- round(na_kalman(series_Municipios[[x[i]]]))
+  series_Facturacion[[x[i]]] <- na_kalman(series_Facturacion[[x[i]]])
+}
+```
+
+Adicionalmente, se hará un tratamiento de los datos atípicos usando la función `tso` del paquete **tsoutliers**. En este caso, las series por departamento muestran valores muy extremos de forma repentina, esto parece que se debe a errores de digitación en el proceso de recopilación de la información. Básicamente este tipo de datos atípicos son los que interesan corregir. En ocasiones se presentan cambios de nivel en las series e incluso cambios completos en el comportamiento de las series que podrían pensarse como atípicos también, pero esto parece que es algo más natural debido por ejemplo a cambios en las condiciones climáticas (fenómeno del niño o niña) e incluso la pandemia. Es por esto que se tendrán en cuenta sólamente los datos atípicos catalogados como "outliers aditivos" que son esos cambios repentinos que se evidencian visualmente como "picos" extremos.
+
+A continuación se realiza la identificación y corrección de los datos atípicos. Se usará un nivel crítico de (10%), el cuál es mayor al que viene por defecto en la función (3.5%) que corresponde al nivel de significancia de cada outlier encontrado. Esto con el fin de que se cataloguen como outliers aquellos picos realmente extremos y no cualquier pequeño cambio en las series de tiempo.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# Se imputan los atípicos aditivos en todas las series de tiempo
+for(i in 1:length(series_Consumo)){
+  series_Consumo[[i]] <- tryCatch(tso(series_Consumo[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Consumo[[i]])
+  series_Suscriptores[[i]] <- tryCatch(tso(series_Suscriptores[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Suscriptores[[i]])
+  series_PrecioGas[[i]] <- tryCatch(tso(series_PrecioGas[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_PrecioGas[[i]])
+  series_Subsidios[[i]] <- tryCatch(tso(series_Subsidios[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Subsidios[[i]])
+  series_Contribuciones[[i]] <- tryCatch(tso(series_Contribuciones[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Contribuciones[[i]])
+  series_Municipios[[i]] <- tryCatch(tso(series_Municipios[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Municipios[[i]])
+  series_Facturacion[[i]] <- tryCatch(tso(series_Facturacion[[i]], cval = 10, types = c("AO"))$yadj, error = function(e) series_Facturacion[[i]])  
+}
+```
+
+Una vez imputados los datos faltantes y habiendo corregido los datos atípicos, se procede a agregar las series de tiempo departamentales para obtener el agregado a nivel país.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+Consumo <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+Suscriptores <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+PrecioGas <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+Subsidios <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+Contribuciones <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+Municipios <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+Facturacion <- ts(0, start = c(2005,1), end = c(2022,12), frequency = 12)
+
+for(i in 1:length(series_Consumo)){
+  Consumo = Consumo + (series_Consumo[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                         ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+  Facturacion = Facturacion + (series_Facturacion[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                                 ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+  Suscriptores = Suscriptores + (series_Suscriptores[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                                   ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+  PrecioGas = Facturacion / Consumo
+  Subsidios = Subsidios + (series_Subsidios[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                             ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+  Contribuciones = Contribuciones + (series_Contribuciones[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                                       ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+  Municipios = Municipios + (series_Municipios[[i]] |> as.data.frame() |> mutate(across(everything(), replace_na, 0)) |> 
+                               ts(0, start = c(2005,1), end = c(2022,12), frequency = 12))
+}
+
+Pais <- data.frame(Consumo, Suscriptores, PrecioGas, Subsidios, Contribuciones, Municipios)
+Pais <- ts(Pais, start = 2005, frequency = 12)
+for(i in 1:6){
+  a = Pais[,i] |> autoplot(colour = 1, size = 1, alpha = 1) +
+    theme_grey(12) + ylab(latex2exp::TeX(Pais_Ylabs[i])) + xlab("Año") + 
+    ggtitle(latex2exp::TeX(Pais_Titulos[i]), "Ene 2005 - Dic 2022")
+  assign(paste("Pais", i, sep = "_"), a)
+}
+grid.arrange(Pais_1, Pais_2, Pais_3, Pais_4, Pais_5, Pais_6, nrow = 2, ncol = 3)
+```
+
+Ahora, se adicionarán las series de tiempo correspondientes a:
+  
+  - ***PrecioEnergia:*** Corresponde al precio mensual de la energía eléctrica. Está medido en $\$/\textrm{kWh}$ pero se convertirá a $\$/m^3$ utilizando un factor de conversión de $10.6$ para que los precios del Gas Natural y de la energía eléctrica estén en las mismas unidades.
+- ***Cobertura:*** Cobertura de Gas Natural a nivel país. Es calculado como el cociente entre el número de hogares con Gas Natural reportado por el **MME** y el número de hogares en el país proyectado por el **DANE**.
+- ***ISE:*** Indicador de Segumiento a la Economía, el cual proporciona una medida de la evolución de la actividad real de la economía nacional en el corto plazo.
+
+```{r}
+#| code-fold: true
+#| warning: false
+energia <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/Energia.xlsx")
+PrecioEnergia <- energia |> filter(ESTRATO == "Residencial Medio") |> group_by(Mes) |> 
+  summarise(Facturacion = sum(`Facturación por consumo ($)`), Consumo = sum(`Consumo total (kWh)`)) |> 
+  mutate(Mes = janitor::excel_numeric_to_date(Mes)) |> filter(Mes <= "2022-12-01") |> 
+  mutate(PrecioEnergia = Facturacion/Consumo) |> select(PrecioEnergia)
+
+PrecioEnergia <- ts(PrecioEnergia*10.6, start = 2006, frequency = 12)
+PrecioEnergia |> autoplot(colour = 1, size = 1, alpha = 1) +
+  theme_grey(12) + ylab(latex2exp::TeX("\\textrm{Precio de la Energía Eléctrica}  $\\$/m3$")) + xlab("Año") + 
+  ggtitle("Precio de la Energía Eléctrica", "Ene 2006 - Dic 2022")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+Meses <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/Cobertura.xlsx", sheet = 1)
+Hogares <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/Cobertura.xlsx", sheet = 2)
+HogaresGas <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/Cobertura.xlsx", sheet = 3)
+
+Hogares <- Meses |> left_join(Hogares, by = "Mes") |> select(Hogares) |> ts(start = 2004, frequency = 12)
+Hogares <- na_interpolation(Hogares)
+Hogares <- ts(Hogares[13:228],start = 2005, frequency = 12)
+
+HogaresGas <- Meses |> left_join(HogaresGas, by = "Mes") |> select(HogaresGas) |> ts(start = 2004, frequency = 12)
+HogaresGas <- na_interpolation(HogaresGas)
+HogaresGas <- ts(HogaresGas[13:228],start = 2005, frequency = 12)
+
+Cobertura <- ts(HogaresGas/Hogares, start = 2005, frequency = 12)
+Cobertura |> autoplot(colour = 1, size = 1, alpha = 1) +
+  theme_grey(12) + ylab(latex2exp::TeX("\\% \\textrm{de cobertura}")) + xlab("Año") + 
+  ggtitle("Cobertura de Gas Natural", "Ene 2005 - Dic 2022")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+ISE <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/ISE.xlsx", sheet = 1)
+ISE <- ISE |> select(ISE) |> ts(start = 2005, frequency = 12)
+
+ISE |> autoplot(colour = 1, size = 1, alpha = 1) +
+  theme_grey(12) + ylab("ISE") + xlab("Año") +
+  ggtitle("Indicador de seguimiento a la economía", "Ene 2005 - Dic 2022")
+```
+
+Dado que la serie de tiempo del precio de la energía eléctrica está disponible desde Enero - 2006, se tendrá en cuenta este mismo periodo para todas las series de tiempo (Enero - 2006 hasta Diciembre - 2022).
+
+Las series de tiempo con las que se trabajarán de ahora en adelante se muestran a continuación:
+  
+```{r}
+#| code-fold: true
+#| warning: false
+
+Consumo <- ts(Consumo[-c(1:12)], start = 2006, frequency = 12)
+Suscriptores <- ts(Suscriptores[-c(1:12)], start = 2006, frequency = 12)
+PrecioGas <- ts(PrecioGas[-c(1:12)], start = 2006, frequency = 12)
+Subsidios <- ts(Subsidios[-c(1:12)], start = 2006, frequency = 12)
+Contribuciones <- ts(Contribuciones[-c(1:12)], start = 2006, frequency = 12)
+Municipios <- ts(Municipios[-c(1:12)], start = 2006, frequency = 12)
+Cobertura <- ts(Cobertura[-c(1:12)], start = 2006, frequency = 12)
+ISE <- ts(ISE[-c(1:12)], start = 2006, frequency = 12)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+Pais <- data.frame(Consumo, Suscriptores, PrecioGas, Subsidios, Contribuciones, Municipios, PrecioEnergia, Cobertura, ISE)
+Pais <- ts(Pais, start = 2006, frequency = 12)
+
+Pais_Ylabs <- c("\\textrm{Demanda} $(m^3)$", "\\textrm{N. de suscriptores}", "\\textrm{Precio en} $\\$/m^3$", "\\textrm{Subsidios} $(\\$)$", "\\textrm{Contribuciones} $(\\$)$", "\\textrm{N. de municipios}", "\\textrm{Precio en} $\\$/m^3$", "\\textrm{Cobertura}", "\\textrm{Valor del Índice}")
+Pais_Titulos <- c("\\textrm{Demanda}", "\\textrm{Número de suscriptores}", "\\textrm{Precio del gas}", "\\textrm{Subsidios}", "\\textrm{Contribuciones}", "\\textrm{Número de municipios}", "\\textrm{Precio de la Energía Eléctrica}", "\\textrm{Cobertura de Gas Natural}", "\\textrm{Indicador de Seguimiento \n a la Economía}")
+
+for(i in 1:9){
+  a = Pais[,i] |> autoplot(colour = 1, size = 1, alpha = 1) +
+    theme_grey(12) + ylab(latex2exp::TeX(Pais_Ylabs[i])) + xlab("Año") +
+    ggtitle(latex2exp::TeX(Pais_Titulos[i]), "Ene 2006 - Dic 2022")
+  
+  assign(paste("Pais", i, sep = "_"), a)
+}
+Pais_graficos <- grid.arrange(Pais_1, Pais_2, Pais_3, Pais_4, Pais_5, Pais_6, Pais_7, Pais_8, Pais_9, nrow = 3, ncol = 3)
+```
+
+## Modelo BSTS
+
+La idea del modelo estructural de series de tiempo es descomponer la serie de tiempo de interés (Demanda de Gas Natural) en sus componentes de tendencia, estacionalidad, términos de error y además incluir el impacto de otras variabes explicativas y de posibles efectos de impacto. Las componentes se modelan explícitamente y pueden ser interpretadas directamente.
+
+La propuesta de modelo de serie de tiempo estructural para la Demanda de Gas Natural es un modelo que descompone la serie en las típicas componentes de tendencia, estacionalidad, regresión y términos de error. La componente de regresión estará conformada por las ocho series de tiempo que podrían estar relacionadas en el comportamiento de la Demanda de Gas Natural.
+
+El enfoque bayesiano del modelo entra a jugar en la especificación de las varianzas correspondientes a las componentes del modelo, y en la especificación a priori del peso de cada variable explicativa.
+
+Se ajustará un modelo con fines predictivos usando el paquete **bsts**. 
+
+Para realizar la predicción, se realizará el ajuste de los hiperparámetros del modelo (en especial de las varianzas a priori de las componentes del modelo) mediante la estrategia de validación cruzada usada en series de tiempo **"Rolling-Origin Cross-Validation"**. La idea es particionar la serie de tiempo en entrenamiento y test en cada una de las ventanas del rolling. Por cada ventana del rolling, se estimará un modelo usando los datos de entrenamiento de la respectiva ventana, y posteriormente se hará la predicción en un horizonte de $h=60$ (5 años) y se compararán estas predicciones con las observaciones reales para obtener las medidas del **RMSE, MAPE,** y **MASE**. Finalmente, para cada modelo (especificado por los hiperparámetros) se promediarán las medidas de error y se escogerá el modelo cuyo error sea el menor de todos.
+
+Dado que la predicción es a largo plazo, la componente de tendencia será implementada mediante una tendencia de tipo lineal semi local ("**semi-local linear trend**") la cuál es más útil para predicción a largo plazo. Esto es porque se asume que la componente del nivel se comporta de acuerdo a una caminata aleatoria, mientras que la pendiente se comporta como un proceso autorregresio de orden 1 **AR(1)** el cuál es menos variable al hacer predicciones a largo plazo que una caminata aleatoria. Así, al ajustar una tendencia de tipo **semi-local linear trend**, se obtienen estimaciones más razonables que asumiendo una tendencia de tipo **local linear trend** la cual asume una pendiente con comportamiento de caminata aleatoria.
+
+Los diferentes modelos ajustados variarán dependiendo de las cuatro varianzas a priori que requiere la tendencia de tipo **semi-local linear trend**. La componente de estacionalidad se ajustará por defecto asumiendo un periodo de $s = 12$. En la componente de regresión se incluirán las ocho variables explicativas y se le asignará una probabilidad a priori equitativa (a excepción de una) de que su coeficiente de regresión sea distinto de 0. A la variable **ISE** se le dará una pobabilidad de inclusión a priori de $0.5$ dado que se tiene una "creencia" de que el consumo de Gas Natural en los hogares podría verse afectado de su estado económico.
+
+Para el ajuste del modelo **bsts**, se tendrán en cuenta dos efectos de intervención: Fenómeno del niño del periodo 2014 - 2016 y el periodo fuerte de cuarentena por la Pandemia en 2020. Esto con el fin de tener en cuenta el impacto de estas intervenciones en el consumo residencial de Gas Natural. El efecto del fenómeno del niño será tenido en cuenta desde febrero-2014 hasta abril-2016 pues se evidencia en este periodo una disminución muy importante de la demanda de gas natural principalmente en Bogotá y en otros departamentos. El efecto de la cuarentena por la pandemia será tenido en cuenta desde abril-2020 hasta noviembre-2020 que es donde se evidencia un mayor aumento en el consumo de Gas Natural debido al encierro en los hogares.
+
+Los efecto por fenómeno del niño y por la pandemia serán incluídos como variables dummies que formarán parte del término de regresión junto con las demás variables explicativas. La idea es que el modelo defina si estas intervenciones tienen un efecto significativo que afecte seriamente las predicciones de la demanda de Gas Natural y que tenga en cuenta estos efectos a la hora de hacer las predicciones a futuro. A continuación se incluirán estos impactos:
+  
+```{r}
+#| code-fold: true
+#| warning: false
+
+EfectoNiño <- ts(rep(0,204), start = 2006, frequency = 12)
+EfectoPandemia <- ts(rep(0,204), start = 2006, frequency = 12)
+window(EfectoNiño, start = c(2014,2), end = c(2016,4)) <- 1
+window(EfectoPandemia, start = c(2020,4), end = c(2020,11)) <- 1
+
+Pais <- as.data.frame(Pais) |> cbind(EfectoNiño, EfectoPandemia) |> 
+  ts(start = 2006, frequency = 12)
+```
+
+La siguiente función genera las ventanas de rolling. Va haciendo la partición entre entrenamiento y prueba, en este caso la ventana de entrenamiento inicial será de 5 años y aumentará progresivamente 1 año conservando los datos del inicio. Se tendrán en cuenta 8 ventanas de rolling, por lo que la última ventana tendrá 12 años de entrenamiento. Las proyecciones serán a 5 años en todos los casos.
+Luego, la función toma la especificación inicial del modelo a ajustar (combinación de hiperparámetros), va ajustando el modelo con los datos de entrenamiento en cada ventana del rolling y realiza la respectiva predicción en un horizonte $h = 60$ (5 años). Luego, se comparan las predicciones hechas con los valores reales y se calculan los respectivos errores.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# se define el horizonte (5 años) y el número de ventanas de rolling
+horizon = 60
+number_of_folds = 8
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# Rolling-origin Cross-Validation
+bsts.cv.loop <- function(data,
+                         horizon, # horizonte de proyección
+                         number_of_folds, # Número de ventanas de rolling
+                         ss.function, # modelo a ajustar (combinación de hiperparámetros)
+                         niter=2000, # Número de MCMC
+                         seed=1232,
+                         burn=200, # Número de MCMC iniciales a descartar
+                         do.plot=TRUE,
+                         verbose=TRUE,
+                         debug=TRUE) {
+  rmse_v <- c()
+  mape_v <- c()
+  mase_v <- c()
+  for (fold in 0:(number_of_folds-1)) {
+    # partición de la ventana de rolling
+    data_train <- data[1:(horizon+fold*12),1] #(1+fold*12)
+    data_reg <- data[1:(horizon+fold*12),-1] #(1+fold*12)
+    data_test <- data[(horizon+1+fold*12):(2*horizon+fold*12),1]
+    newdata <- data[(horizon+1+fold*12):(2*horizon+fold*12),-1]
+    # Ajuste del modelo
+    model <- bsts(data_train ~ data_reg -1, # Se ajusta el modelo con regresión
+                  state.specification=ss.function(data_train),
+                  niter=niter,
+                  seed=seed,
+                  ping=0,
+                  prior.inclusion.probabilities = c(0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.5,0.1,0.1))
+    # Predicciones en un horizonte de 5 años
+    pred <- predict(model, horizon=horizon, newdata=newdata, burn=burn)
+    if (do.plot) {
+      plot(pred, plot.original = TRUE, xlab = "Mes", ylab = "Demanda de Gas Natural",
+           main = "Predicción 5 años vs valores reales")
+      lines((horizon+1+fold*12):(2*horizon+fold*12), data_test, col="red", type="l")
+    }
+    # errores de ajuste del modelo
+    errors <- data_test-pred$mean
+    rmse <- sqrt(mean(errors^2))
+    rmse_v <- c(rmse_v, rmse)
+    mape <- mean(abs(errors)/data_test)*100
+    mape_v <- c(mape_v, mape)
+    naive_prediction_errors <- diff(data, 1)
+    mase <- mean(abs(errors)) / mean(abs(naive_prediction_errors))
+    mase_v <- c(mase_v, mase)
+    if (verbose) print(paste0("fold ", fold, ": mape ", mape, " / mase ", mase))
+  }
+  return(data.frame(rmse=rmse_v,mape=mape_v, mase=mase_v))
+}
+```
+
+Se ajusta el modelo **bsts** propuesto por cada combinación de hiperparámetros. Al final se escoge la combinación de hiperparámetros cuya predicción a través de las ventanas del rolling tenga menor error promedio (**RMSE**). 
+A continuación se muestra el resultado de la predicción en las ocho ventanas de rolling para la mejor combinación de hiperparámetros encontrada al ajustar el modelo.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# 0.1,0.01,0.01,0.05  Mejor combinación de hiperparámetros encontrada.
+
+res_df3 <- c()
+# Se busca la mejor combinación posible de hiperparámetros
+for (level_sigma_guess in c(0.1)) { # 0.01, 0.05, 0.1, 0.5
+  for (slope_mean_guess in c(0.01)) { # 0.01, 0.05, 0.1, 0.5
+    for (slope_sigma_guess in c(0.01)) { # 0.01, 0.05, 0.1, 0.5
+      for (ar_sigma_guess in c(0.05)) { # 0.01, 0.05, 0.1, 0.5, 1
+        res <-
+          bsts.cv.loop(Pais,
+                       horizon=horizon,
+                       number_of_folds=number_of_folds,
+                       ss.function=function(data_train) {
+                         sdy <- sd(data_train)
+                         sigma.prior <- SdPrior(sigma.guess=level_sigma_guess*sdy,
+                                                upper.limit=sdy,
+                                                sample.size=16)
+                         slope.mean.prior <- NormalPrior(mu=0,
+                                                         sigma=slope_mean_guess*sdy)
+                         slope.ar1.prior <- Ar1CoefficientPrior(mu=0,
+                                                                sigma=1*ar_sigma_guess)
+                         slope.sigma.prior <- SdPrior(sigma.guess=slope_sigma_guess*sdy,
+                                                      upper.limit=sdy,
+                                                      sample.size=16)
+                         # especificación del modelo (tendencia y estacionalidad)
+                         ss <- AddSemilocalLinearTrend(list(),
+                                                       data_train,
+                                                       level.sigma.prior=sigma.prior,
+                                                       slope.mean.prior=slope.mean.prior,
+                                                       slope.ar1.prior=slope.ar1.prior,
+                                                       slope.sigma.prior=slope.sigma.prior)
+                         return(AddSeasonal(ss, data_train, nseasons = 12))
+                       },
+                       debug=FALSE,
+                       verbose=FALSE)
+        print(paste0("level_sigma_guess ", level_sigma_guess,
+                     " / slope_mean_guess ", slope_mean_guess,
+                     " / slope_sigma_guess ", slope_sigma_guess,
+                     " / ar_sigma_guess ", ar_sigma_guess,
+                     ": mean(rmse) ", mean(res$rmse),
+                     " / mean(mape) ", mean(res$mape),
+                     " / mean(mase) ", mean(res$mase)))
+        res_row <- data.frame(level_sigma_guess=level_sigma_guess,
+                              slope_mean_guess=slope_mean_guess,
+                              slope_sigma_guess=slope_sigma_guess,
+                              ar_sigma_guess=ar_sigma_guess,
+                              mean_rmse=mean(res$rmse),
+                              mean_mape=mean(res$mape),
+                              mean_mase=mean(res$mase))
+        res_df3 <- rbind(res_df3, res_row)
+      }
+    }
+  }
+}
+
+# se escoge el modelo que tenga un menor error en promedio, a través de
+# las ventanas del rolling.
+```
+
+Los valores de los hiperparámetros y las medidas de error se muestran a continuación:
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+(error_min <- res_df3[which.min(res_df3$mean_rmse),])
+```
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# Se especifican los hiperparámetros del modelo elegido
+sdy <- sd(Pais[,1])
+level.sigma.prior <- SdPrior(sigma.guess=error_min$level_sigma_guess*sdy,
+                             upper.limit=sdy,
+                             sample.size=16)
+slope.ar1.prior <- Ar1CoefficientPrior(mu=0,
+                                       sigma=error_min$ar_sigma_guess)
+slope.mean.prior <- NormalPrior(mu=0,
+                                sigma=error_min$slope_mean_guess*sdy)
+slope.sigma.prior <- SdPrior(sigma.guess=error_min$slope_sigma_guess*sdy,
+                             upper.limit=sdy,
+                             sample.size=16)
+# Se ajusta el modelo final con las componentes de tendencia,
+# estacionalidad y regresión.
+ss <- AddSemilocalLinearTrend(list(),
+                              Pais[,1],
+                              level.sigma.prior=level.sigma.prior,
+                              slope.ar1.prior=slope.ar1.prior,
+                              slope.mean.prior=slope.mean.prior,
+                              slope.sigma.prior=slope.sigma.prior)
+ss <- AddSeasonal(ss, Pais[,1], nseasons = 12)
+chosen_model <- bsts(Consumo ~ . -1, data = Pais,
+                     state.specification=ss,
+                     niter=2000,
+                     seed=1232,
+                     ping=0,
+                     prior.inclusion.probabilities = c(0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.5,0.1,0.1))
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsState(chosen_model, burn = SuggestBurn(0.1, chosen_model), 
+              show.actuals = TRUE, style = "dynamic", scale = "linear",
+              xlab = "Mes", 
+              ylab = "Contribución agregada de las componentes\n del vector de estados a la media",
+              main = "Distribución posterior del vector de estados del modelo", pch = 20)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsComponents(chosen_model, burn = SuggestBurn(0.1, chosen_model),
+                   same.scale = FALSE,
+                   layout = "square",
+                   style = "dynamic",
+                   components = 1:length(chosen_model$state.specification),
+                   xlab = "Mes", ylab = "Distribución posterior")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsCoefficients(chosen_model, burn = SuggestBurn(0.1, chosen_model),
+                     inclusion.threshold = 0, number.of.variables = NULL, 
+                     main = "Probabilidad de inclusión de las variables explicativas")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsResiduals(chosen_model, burn = SuggestBurn(.1, chosen_model),
+                  style = "dynamic", means = TRUE, main = "Distribución posterior de los residuales\n dados todos los datos disponibles (filtrado y suavizado)")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsPredictionErrors(chosen_model, burn = SuggestBurn(.1, chosen_model),
+                         style = "dynamic", 
+                         main = "\nErrores de predicción 1 paso adelante (filtrado)")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+PlotBstsForecastDistribution(chosen_model, cutpoints = NULL,
+                             burn = SuggestBurn(.1, chosen_model),
+                             style = c("dynamic"),
+                             main = "\nPredicciones 1 paso adelante ",
+                             show.actuals = TRUE,
+                             col.actuals = "blue", pch = 20)
+```
+
+Una vez ajustado el modelo final, se realizarán las predicciones 5 años en el futuro (2023 - 2027). Primero se harán las predicciones de las variables explicativas que fueron más significativas en el modelo ajustado: las contribuciones, ISE, la cobertura, el precio del gas y el precio de la energía eléctrica. La predicción de estas series de tiempo serán realizadas ajustando un modelo **bsts** con componentes de tendencia y estacionalidad para cada una.
+
+Las predicciones de las variables explicativas se recopilan en el conjunto de datos **newdata** necesario para realizar las predicciones con el modelo ajustado. Las variables no significativas no aportarán en la predicción y los efectos de impacto tampoco justamente para que el modelo realice las predicciones teniendo en cuenta los impactos en el periodo en que ocurrieron.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# Se realizan las predicciones de las variables explicativas más significativas
+
+ss_Contribuciones <- AddSemilocalLinearTrend(list(), Contribuciones)
+ss_Contribuciones<- AddSeasonal(ss_Contribuciones, Contribuciones, nseasons = 12)
+bsts.model_Contribuciones <- bsts(Contribuciones,
+                                  state.specification = ss_Contribuciones,
+                                  niter = 2000, seed = 1232, ping = 0)
+pred_Contribuciones <- predict.bsts(bsts.model_Contribuciones, horizon = 5*12, burn = 200,
+                                    quantiles = c(0.025, 0.975))
+plot(pred_Contribuciones, plot.original = TRUE, main="Contribuciones")
+newdata <- data.frame(Contribuciones = pred_Contribuciones$mean)
+
+
+ss_ISE <- AddSemilocalLinearTrend(list(), ISE)
+ss_ISE<- AddSeasonal(ss_ISE, ISE, nseasons = 12)
+bsts.model_ISE <- bsts(ISE,
+                       state.specification = ss_ISE,
+                       niter = 2000, seed = 1232, ping = 0)
+pred_ISE <- predict.bsts(bsts.model_ISE, horizon = 5*12, burn = 200,
+                         quantiles = c(0.025, 0.975))
+plot(pred_ISE, plot.original = TRUE, main="ISE")
+newdata <- cbind(newdata, ISE = pred_ISE$mean)
+
+
+ss_Cobertura <- AddSemilocalLinearTrend(list(), Cobertura)
+ss_Cobertura<- AddSeasonal(ss_Cobertura, Cobertura, nseasons = 12)
+bsts.model_Cobertura <- bsts(Cobertura,
+                             state.specification = ss_Cobertura,
+                             niter = 2000, seed = 1232, ping = 0)
+pred_Cobertura <- predict.bsts(bsts.model_Cobertura, horizon = 5*12, burn = 200,
+                               quantiles = c(0.025, 0.975))
+plot(pred_Cobertura, plot.original = TRUE, main="Cobertura")
+newdata <- cbind(newdata, Cobertura = pred_Cobertura$mean)
+
+
+ss_PrecioGas <- AddSemilocalLinearTrend(list(), PrecioGas)
+ss_PrecioGas <- AddSeasonal(ss_PrecioGas, PrecioGas, nseasons = 12)
+bsts.model_PrecioGas <- bsts(PrecioGas,
+                             state.specification = ss_PrecioGas,
+                             niter = 2000, seed = 1232, ping = 0)
+pred_PrecioGas <- predict.bsts(bsts.model_PrecioGas, horizon = 5*12, burn = 200,
+                               quantiles = c(0.025, 0.975))
+plot(pred_PrecioGas, plot.original = TRUE, main = "Precio del Gas")
+newdata <- cbind(newdata, PrecioGas = pred_PrecioGas$mean)
+
+
+ss_PrecioEnergia <- AddSemilocalLinearTrend(list(), PrecioEnergia)
+ss_PrecioEnergia <- AddSeasonal(ss_PrecioEnergia, PrecioEnergia, nseasons = 12)
+bsts.model_PrecioEnergia <- bsts(PrecioEnergia,
+                                 state.specification = ss_PrecioEnergia,
+                                 niter = 2000, seed = 1232, ping = 0)
+pred_PrecioEnergia <- predict.bsts(bsts.model_PrecioEnergia, horizon = 5*12, burn = 200,
+                                   quantiles = c(0.025, 0.975))
+plot(pred_PrecioEnergia, plot.original = TRUE, main="Precio de la Energía Eléctrica")
+newdata <- cbind(newdata, PrecioEnergia = pred_PrecioEnergia$mean)
+
+newdata <- newdata |> mutate(Suscriptores=0,Subsidios=0,Municipios=0,EfectoNiño=0,EfectoPandemia=0)
+```
+
+Finalmente, se realizan las predicciones de la demanda de Gas Natural para los años 2023 - 2027 usando el modelo ajustado anteriormente y usando la nueva información de las variables explicativas asociada a los años de la predicción.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+# Predicciones finales de la demanda de Gas Natural 2023 - 2027.
+
+pred <- predict(chosen_model, horizon=horizon, newdata = newdata, burn = 200, seed = 1232)
+plot(pred, plot.original = TRUE, main="Predicción de la demanda de Gas Natural 2023 - 2027", 
+     ylab = "Demanda de Gas Natural", xlab = "Año")
+
+original <- as.numeric(pred$original.series)*35315/1000000000/30 |> ts(start = c(2006,1), end = c(2022,12), frequency = 12)
+
+predicciones <- as.numeric(pred$mean)*35315/1000000000/30 |> ts(start = c(2023,1), end = c(2027,12), frequency = 12)
+
+# ts_plot(original,type = "single",color = "blue")
+# ts_plot(predicciones, color="red",type = "single")
+
+todo <- cbind(original,predicciones)
+```
+
+A continuación se compararán las predicciones desde Enero de 2023 hasta Junio de 2024 con los datos "reales" informados por el **Gestor del mercado de Gas Natural** en sus informes mensuales. Esta comparación es solo a manera de "prueba" ya que estos datos informados mensualmente están sujetos a estimaciones realizadas por los comercializadores sobre las cantidades de Gas Natural consumidos en su respectiva operación. Habría que esperar la actualización correcta del consumo de Gas Natural en este periodo reportado en el **SUI** para que la comparación sea correcta.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+demanda2324 <- read_excel("C:/Users/e0306829/OneDrive - Ecopetrol S.A/Escritorio/Pasantía/Datos/demanda2023-2024.xlsx")$Consumo
+demanda2324 <- (demanda2324) |> ts(start = c(2023,1),frequency = 12)
+
+predfinal <- data.frame(Mes = c(time(todo),time(demanda2324)), Tipo = c(rep("Original", 204), rep("Predicción", 60), rep("Demanda (real) Ene-2023 / Jun-2024", 18)), Valor = c(todo[1:204,1],todo[205:264,2],demanda2324))
+
+predfinal %>% 
+  group_by(Tipo) %>% 
+  plot_ly(x=predfinal$Mes) %>% 
+  add_lines(y=~predfinal$Valor, color = ~factor(Tipo)) |> 
+  layout(title = 'Demanda de Gas Natural', xaxis = list(title = 'Mes'), yaxis = list(title = 'GBTUD'), legend = list(title=list(text='<b> Serie: </b>'), orientation = "h", xanchor = "center", x = 0.5, y = -0.2))
+```
+
